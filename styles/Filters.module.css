@@ -1,0 +1,38 @@
+.filter {
+  font-size: x-large;
+  padding-bottom: 0.5em;
+  width: 90%;
+  margin: auto;
+}
+
+.filterLinks {
+  width: 100%;
+  display: block;
+  padding: 0.5em 1em;
+  color: black;
+  border-radius: 0.5em;
+}
+
+.filterLinks:hover {
+  background-color:#E8E8E8;
+}
+
+.navigation {
+  background-color:whitesmoke;
+  /* max-height: calc(100vh - 88.67px); */
+  min-height: calc(100vh - 88.67px);
+}
+
+.filterDiv {
+  padding-top: 0.75em;
+}
+
+@media only screen and (max-width: 64em) {
+  .navigation {
+    min-height: 0;
+  }
+
+  /* .filter {
+    padding-bottom: 0.5em;
+  } */
+}

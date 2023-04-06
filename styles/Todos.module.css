@@ -1,0 +1,73 @@
+.welcome {
+  background-color: royalblue;
+  color: white;
+  padding: 0.25em 1em;
+  margin: 0;
+}
+
+.add {
+  padding: 0 0.25em;
+  border-radius: 0.25em;
+  /* margin: 0 auto; */
+}
+
+.logout {
+  padding: 0 0.25em;
+  border-radius: 0.25em;
+  color: white;
+}
+
+.add_logout {
+  float: right;
+}
+
+.logout:hover,
+.add:hover {
+  background-color: rgb(107, 137, 224);
+  cursor: pointer;
+}
+
+.addTaskForm {
+  box-shadow: 0 0 0.5em;
+  border-radius: 0.5em;
+  margin: 0.5em 8em;
+  padding: 0;
+}
+
+.formTitle {
+  padding: 1em 1em 0.5em 1em;
+}
+
+.titleInput {
+  width: 100%;
+}
+
+.formDescription {
+  padding: 0.5em 1em 0.5em 1em;
+}
+
+.descriptionInput {
+  width: 100%;
+}
+
+.formDateSubject {
+  padding: 0.5em 1em 0.5em 1em;
+}
+
+.dateInput {
+  margin-right: 0.75em;
+}
+
+.formSubmit {
+  padding: 0.5em 1em 1em 1em;
+}
+
+.cancelButton {
+  margin-right: 0.75em;
+}
+
+@media screen and (max-width: 64em) {
+  .hamburger {
+    display: none;
+  }
+}

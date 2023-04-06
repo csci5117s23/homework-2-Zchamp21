@@ -1,0 +1,105 @@
+.h2 {
+  margin-left: 5.5em;
+}
+
+.checkboxDiv {
+  text-align: center;
+  /* border-radius: 50%; */
+  /* padding-top: 0.5em; */
+}
+
+.checkboxSpan {
+  font-size: x-large;
+}
+
+.todoItem {
+  margin: 1em 8em;
+  border-bottom: 1px solid grey;
+  padding-bottom: 0.5em;
+}
+
+/* https://stackoverflow.com/questions/33718245/limit-characters-displayed-in-span */
+.title {
+  font-size: x-large;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-bottom: 0.05em;
+  margin-left: 0.75em;
+}
+
+.date {
+  margin-left: 0.75em;
+}
+
+.subjectDiv {
+  float: right;
+  padding-top: 4em;
+  padding-right: 1em;
+}
+
+.subjectIcon {
+  font-size: small;
+}
+
+.todayDiv {
+  margin: 1em 8em;
+}
+
+.todaysDate {
+  font-size: large;
+  font-weight: 400;
+}
+
+.checkboxDiv:hover {
+  cursor: pointer;
+} 
+
+.titleText {
+  text-decoration: line-through;
+}
+
+.addTaskDiv {
+  margin-bottom: 1.5em;
+  margin-left: 7.5em;
+}
+
+.addTaskButton {
+  border-radius: 50%;
+  padding: 0 0.25em;
+  font-size: x-large;
+  color: royalblue;
+}
+
+.addTask {
+  font-size: x-large;
+  color: grey;
+}
+
+.addTaskSpan:hover {
+  cursor: pointer;
+}
+.addTaskSpan:hover .addTaskButton {
+  color: white;
+  background-color: royalblue;
+}
+.addTaskSpan:hover .addTask {
+  color: royalblue;
+}
+
+@media screen and (max-width: 64em) {
+  .todayDiv,
+  .todoItem {
+    margin: 1em 1em;
+  }
+
+  .h2 {
+    margin: 0 1em;
+  }
+
+  .addTaskButton {
+    margin-left: 1em;
+  }
+}
