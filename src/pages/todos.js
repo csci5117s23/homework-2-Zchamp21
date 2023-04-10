@@ -48,9 +48,9 @@ export default function Todos() {
             </TodoItems>
           </div>
       </SignedIn>
-      <SignedOut>
+      {/* <SignedOut>
         <RedirectToSignIn></RedirectToSignIn>
-      </SignedOut>
+      </SignedOut> */}
         {/* </SignedIn>
         <SignedOut>
           <SignIn />
