@@ -51,7 +51,7 @@ export default function Home() {
           <main>
             <h1 className={styles.welcome}>Welcome to Zach's To-Do App!</h1>
             <br></br><br></br>
-            <h2>If you would to make your own to-do list, please login <Link href='/todos'>here</Link>!</h2>
+            <h2>If you would to make your own to-do list, please login <Link href='https://pumped-primate-55.accounts.dev/sign-in?redirect_url=https%3A%2F%2Ftiny-torte-956043.netlify.app%2Ftodos'>here</Link>!</h2>
           </main>
         </div>
       </SignedOut>
