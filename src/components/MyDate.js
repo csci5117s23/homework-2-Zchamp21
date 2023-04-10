@@ -1,4 +1,4 @@
-import { parseISO, format } from 'date-fns';
+// import { parseISO, format } from 'date-fns';
 import React from 'react';
 import styles from '../styles/TodoItems.module.css';
 
@@ -8,11 +8,19 @@ export default function MyDate({ date, isOverdue }) {
   // This replaces hyphens with '/', because if the date is constructed with hyphens, it
   // potentially creates a date with the wrong day for some reason.
   // https://stackoverflow.com/questions/7556591/is-the-javascript-date-object-always-one-day-off
-  let newDate = new Date(date.toString().replace(/-/g, '\/'));
+  // let newDate = new Date(date.toString().replace(/-/g, '\/'));
+  // let month = newDate.getMonth();
+  // let day = newDate.getDate();
+  // let year = newDate.getFullYear();
 
-  let month = newDate.getMonth();
-  let day = newDate.getDate();
-  let year = newDate.getFullYear();
+  // console.log('date: ', date);
+
+  let newDate = new Date(date);
+  // let month = newDate.
+
+  let month = newDate.getUTCMonth();
+  let day = newDate.getUTCDate();
+  let year = newDate.getUTCFullYear();
 
   let dateStr = `${months[month]} ${day}, ${year}`;
 
@@ -29,6 +37,6 @@ export default function MyDate({ date, isOverdue }) {
   ));
 
   return (
-    <div className={styles.date} style={myStyle}>{dateStr}</div>
+    <span className={styles.date} style={myStyle}>{dateStr}</span>
   );
 }

@@ -1,0 +1,75 @@
+.taskData {
+  background-color:whitesmoke;
+  min-height: calc(100vh - 88.67px);
+}
+
+.dateDiv,
+.subjectDiv {
+  font-size: x-large;
+  font-weight: 500;
+  margin: 1em;
+}
+
+.dateFormDiv,
+.subjectFormDiv {
+  margin: 1em;
+}
+
+.editTitle,
+.editDate,
+.editSubject {
+  float: right;
+}
+
+.editTitle:hover,
+.editDate:hover,
+.editSubject:hover {
+  cursor: pointer;
+  color: royalblue;
+}
+
+.updateTitleButton,
+.updateDateButton,
+.updateSubjButton {
+  margin-left: 1em;
+}
+
+.updateTitleButton:hover,
+.updateDateButton:hover,
+.updateSubjButton:hover {
+  cursor: pointer;
+}
+
+.dueDate {
+  margin: 1em;
+  font-size: x-large;
+}
+
+.checkboxSpan {
+  font-size: xx-large;
+}
+
+.titleText {
+  text-decoration: line-through;
+}
+
+.title {
+  font-size: xx-large;
+  margin-top: 1em;
+}
+
+.editTitle {
+  font-size: xx-large;
+  margin-right: 0.75em;
+  /* margin-top: 0.5em; */
+}
+
+.titleDiv {
+  margin: 0.5em;
+}
+
+.titleInput {
+  width: 95%;
+  /* height: 5em; */
+  margin: 1em;
+}

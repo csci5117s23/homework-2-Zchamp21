@@ -1,8 +1,9 @@
-import { faCircle as solidFaCircle, faCircleCheck as solidFaCircleCheck} from '@fortawesome/free-solid-svg-icons';
+import styles from '../styles/TodoItems.module.css';
+import { faCropSimple, faCircle as solidFaCircle, faCircleCheck as solidFaCircleCheck} from '@fortawesome/free-solid-svg-icons';
 import { faCircle as hollowFaCircle, faCircleCheck as hollowFaCircleCheck} from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
-import styles from '../styles/TodoItems.module.css';
+// import styles from '../styles/TodoItems.module.css';
 import MyDate from './MyDate.js';
 
 // TODO: Maybe add an isDone prop when creating the 'done' page.
@@ -12,9 +13,9 @@ import MyDate from './MyDate.js';
 // TODO: Done tasks should only appear on the 'done' page.
 // TODO: Maybe use state to store all entries though to handle the removal or addition
 // TODO: of an entry by clicking the checkbox.
-export default function TodoItem({ title, subject, subjectColor, date, isOverdue, isDone }) {
+export default function TodoItem({ id, title, subject, subjectColor, date, isOverdue, isDone, onClick }) {
   const [isHovering, setIsHovering] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
+  const [isClicked, setIsClicked] = useState(isDone);
   const [touched, setTouched] = useState(false);
   function handleMouseHover() {
     setIsHovering(!isHovering);
@@ -23,6 +24,7 @@ export default function TodoItem({ title, subject, subjectColor, date, isOverdue
   // TODO: Modify these functions so that they make database modifications.
   function handleClick() {
     setIsClicked(!isClicked);
+    onClick(id, !isDone);
   }
 
   function handleTouch() {
@@ -39,13 +41,17 @@ export default function TodoItem({ title, subject, subjectColor, date, isOverdue
   // If isHovering is true, then stack two icons to show a preview of a checked checkbox.
   // Otherwise, only use a circle icon which represents an un-checked checkbox.
   let checkbox = (isHovering ? (
-    <div className={styles.checkboxDiv} onClick={handleClick} onMouseEnter={handleMouseHover} onMouseLeave={handleMouseHover}>
-      <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={hollowFaCircle} style={{color: subjectColor,}} /></span>
-      <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={solidFaCircleCheck} style={{color: subjectColor, opacity: '0.5'}}/></span>
+    <div className={styles.checkboxDiv}>
+      <span className={styles.hoverSpan} onClick={handleClick} onMouseEnter={handleMouseHover} onMouseLeave={handleMouseHover}>
+        <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={hollowFaCircle} style={{color: subjectColor,}} /></span>
+        <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={solidFaCircleCheck} style={{color: subjectColor, opacity: '0.5'}}/></span>
+      </span>
     </div>
   ) : (
-    <div className={styles.checkboxDiv} onClick={handleClick} onMouseEnter={handleMouseHover} onMouseLeave={handleMouseHover} onTouchStart={handleTouch}>
-      <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={hollowFaCircle} style={{color: subjectColor,}} /></span>
+    <div className={styles.checkboxDiv}>
+      <span className={styles.hoverSpan} onClick={handleClick} onMouseEnter={handleMouseHover} onMouseLeave={handleMouseHover} onTouchStart={handleTouch}>
+        <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={hollowFaCircle} style={{color: subjectColor,}} /></span>
+      </span>
     </div>
   ));
 
@@ -57,7 +63,7 @@ export default function TodoItem({ title, subject, subjectColor, date, isOverdue
   // Overwrite the default checkbox and title depending on the value of isDone.
   // If isDone is true, then update the checkbox to always have the stacked icons and the title to have a strike-through.
   // Otherwise, the defaults assigned above are used.
-  if (isDone) {
+  if (isClicked) {
     checkbox = (
       <div className={styles.checkboxDiv} onClick={handleClick} onTouchStart={handleTouch}>
         <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={hollowFaCircle} style={{color: subjectColor,}} /></span>
@@ -73,7 +79,7 @@ export default function TodoItem({ title, subject, subjectColor, date, isOverdue
 
   return (
     <div className={`${styles.todoItem} pure-g`}>
-      <div className={`${styles.checkboxDiv} pure-u-1-24 fa-stack`}>
+      <div className={`fa-stack ${styles.checkboxDiv} pure-u-1-24`}>
         {checkbox}
       </div>
       <div className='pure-u-18-24'>
@@ -81,7 +87,7 @@ export default function TodoItem({ title, subject, subjectColor, date, isOverdue
         <br></br><br></br>
         <MyDate date={date} isOverdue={isOverdue}></MyDate>
       </div>
-      <div className='pure-u-5-24'>
+      <div className='pure-u-4-24'>
         <div className={styles.subjectDiv}>
           <span className={styles.subjectIcon}><FontAwesomeIcon icon={solidFaCircle} style={{color: subjectColor,}} />&nbsp;</span>
           <span className={styles.subject}>{subject} </span>

@@ -5,8 +5,10 @@ import Today from './Today.js';
 import AddTask from './AddTask.js';
 import OverdueItemsList from './OverdueItemsList.js';
 import Form from './Form.js';
+import DoneItemsList from './DoneItemsList.js';
+import DoneWrapper from './DoneWrapper.js';
 
-export default function TodoItems({ topFormVisible, bottomFormVisible, cancelTopForm, toggleBottomForm }) {
+export default function TodoItems() {
   const [upcomingTasks, setUpcomingTasks] = useState([]);
 
   function addTask(newTask) {
@@ -15,12 +17,7 @@ export default function TodoItems({ topFormVisible, bottomFormVisible, cancelTop
   
   return (
     <div className='pure-u-1 pure-u-lg-4-5'>
-      <Form isVisible={topFormVisible} cancelForm={cancelTopForm} addTask={addTask}></Form>
-      <Today></Today>
-      <OverdueItemsList></OverdueItemsList>
-      <TodoItemsList tasks={upcomingTasks}></TodoItemsList>
-      <AddTask formVisible={bottomFormVisible} showForm={toggleBottomForm}></AddTask>
-      <Form isVisible={bottomFormVisible} cancelForm={toggleBottomForm} addTask={addTask}></Form>
+      <DoneWrapper tasks={upcomingTasks}></DoneWrapper>
     </div>
   );
 }

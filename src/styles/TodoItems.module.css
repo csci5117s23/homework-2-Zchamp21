@@ -4,8 +4,6 @@
 
 .checkboxDiv {
   text-align: center;
-  /* border-radius: 50%; */
-  /* padding-top: 0.5em; */
 }
 
 .checkboxSpan {
@@ -53,9 +51,9 @@
   font-weight: 400;
 }
 
-.checkboxDiv:hover {
+.hoverSpan {
   cursor: pointer;
-} 
+}
 
 .titleText {
   text-decoration: line-through;
@@ -99,7 +97,7 @@
     margin: 0 1em;
   }
 
-  .addTaskButton {
+  .addTaskDiv {
     margin-left: 1em;
   }
 }

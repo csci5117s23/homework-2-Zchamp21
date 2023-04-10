@@ -15,6 +15,7 @@
   padding: 0 0.25em;
   border-radius: 0.25em;
   color: white;
+  display: inline;
 }
 
 .add_logout {
@@ -66,8 +67,24 @@
   margin-right: 0.75em;
 }
 
+.loadingSpan {
+  margin: 0.5em 8em;
+}
+
 @media screen and (max-width: 64em) {
   .hamburger {
     display: none;
   }
+
+  .addTaskForm {
+    margin: 0.5em 1em;
+  }
+
+  .loadingSpan {
+    margin: 0.5em 1em;
+  }
+
+  /* .add_logout {
+    float: none;
+  } */
 }

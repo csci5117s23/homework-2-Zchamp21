@@ -1,19 +1,26 @@
 {
+  "name": "hw2",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^4.15.0",
     "@fortawesome/free-brands-svg-icons": "^6.4.0",
     "@fortawesome/free-regular-svg-icons": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "date-fns": "^2.29.3",
-    "next": "latest",
+    "codehooks-crudlify": "^1.0.8",
+    "codehooks-js": "^1.0.10",
+    "next": "13.3.0",
     "purecss": "^3.0.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-router-dom": "^6.10.0",
+    "yup": "^1.0.2"
   }
 }
