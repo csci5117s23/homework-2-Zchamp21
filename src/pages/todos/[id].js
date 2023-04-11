@@ -47,36 +47,40 @@ async function getTaskData() {
 }
 
 export async function getStaticProps(context) {
-  const taskID = context.params?.id;
-  console.log(taskID);
-  const data = await getTaskData();
-  const foundTask = data.find((task) => taskID === task._id);
-  console.log('id: ', taskID);
-  console.log('props data: ', data);
-  console.log('found task: ', foundTask);
+  try {
+    const taskID = context.params?.id;
+    console.log(taskID);
+    const data = await getTaskData();
+    const foundTask = data.find((task) => taskID === task._id);
+    console.log('id: ', taskID);
+    console.log('props data: ', data);
+    console.log('found task: ', foundTask);
 
-  // This is the task that will actually get sent as props. I do this because
-  // I don't want any author data sent.
-  let task = {
-    _id: foundTask._id,
-    title: foundTask.title,
-    description: foundTask.description,
-    subject: foundTask.subject,
-    subjectColor: foundTask.subjectColor,
-    dueDate: foundTask.dueDate,
-    isDone: foundTask.isDone
-  }
-
-  console.log('updated task: ', task);
-
-  // if (!foundTask) {
-  //   return 
-  // }
-
-  return {
-    props: {
-      desiredTask: task
+    // This is the task that will actually get sent as props. I do this because
+    // I don't want any author data sent.
+    let task = {
+      _id: foundTask._id,
+      title: foundTask.title,
+      description: foundTask.description,
+      subject: foundTask.subject,
+      subjectColor: foundTask.subjectColor,
+      dueDate: foundTask.dueDate,
+      isDone: foundTask.isDone
     }
+
+    console.log('updated task: ', task);
+
+    // if (!foundTask) {
+    //   return 
+    // }
+
+    return {
+      props: {
+        desiredTask: task
+      }
+    }
+  } catch (error) {
+    console.error('Error: ', error);
   }
 }
 
