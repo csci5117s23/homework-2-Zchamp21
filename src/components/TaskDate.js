@@ -1,3 +1,5 @@
+const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+
 import MyDate from "./MyDate";
 import styles from '../styles/IndividualTask.module.css';
 import { useEffect, useState } from "react";
@@ -17,7 +19,7 @@ export default function TaskDate({ taskId, date, isOverdue }) {
     const updateDate = async () => {
       if (curDate != date) {
         try {
-          const response = await fetch(TODO_API_ENDPOINT + `/${taskId}`, {
+          const response = await fetch(backend_base + `/todoItems/${taskId}`, {
             'method': 'PATCH',
             'headers': {
               'x-apikey': API_KEY,

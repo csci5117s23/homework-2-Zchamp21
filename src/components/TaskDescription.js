@@ -1,3 +1,5 @@
+const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+
 import { useState, useEffect } from "react";
 import styles from '../styles/IndividualTask.module.css';
 
@@ -16,7 +18,7 @@ export default function TaskDescription({ id, description }) {
     const updateDescription = async () => {
       if (curDescription != description) {
         try {
-          const response = await fetch(TODO_API_ENDPOINT + `/${id}`, {
+          const response = await fetch(backend_base + `/todoItems/${id}`, {
             'method': 'PATCH',
             'headers': {
               'x-apikey': API_KEY,

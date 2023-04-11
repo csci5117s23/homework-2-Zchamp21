@@ -1,3 +1,5 @@
+const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+
 import { useEffect, useState } from "react";
 import { faCropSimple, faCircle as solidFaCircle, faCircleCheck as solidFaCircleCheck} from '@fortawesome/free-solid-svg-icons';
 import { faCircle as hollowFaCircle, faCircleCheck as hollowFaCircleCheck} from '@fortawesome/free-regular-svg-icons';
@@ -39,7 +41,7 @@ export default function TaskTitle({ id, title, subjectColor,  isDone, onClick })
     const updateTitle = async () => {
       if (curTitle != title) {
         try {
-          const response = await fetch(TODO_API_ENDPOINT + `/${id}`, {
+          const response = await fetch(backend_base + `/todoItems/${id}`, {
             'method': 'PATCH',
             'headers': {
               'x-apikey': API_KEY,

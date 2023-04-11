@@ -1,3 +1,5 @@
+const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+
 import { useState, useEffect } from "react";
 import styles from '../styles/IndividualTask.module.css';
 import { faCircle as solidFaCircle, faCircleCheck as solidFaCircleCheck} from '@fortawesome/free-solid-svg-icons';
@@ -19,7 +21,7 @@ export default function TaskSubject({ taskId, subject, subjectColor }) {
     const fetchSubjects = async () => {
       // console.log('rendering')
       try {
-        const response = await fetch(SUBJECT_API_ENDPOINT, {
+        const response = await fetch(backend_base + '/subjects', {
           'method': 'GET',
           'headers': {
             'x-apikey': API_KEY}
@@ -49,7 +51,7 @@ export default function TaskSubject({ taskId, subject, subjectColor }) {
 
   async function updateSubject(newSubject, newSubjectColor) {
     try {
-      const response = await fetch(TODO_API_ENDPOINT + `/${taskId}`, {
+      const response = await fetch(backend_base + `/todoItems/${taskId}`, {
         'method': 'PATCH',
         'headers': {
           'x-apikey': API_KEY,

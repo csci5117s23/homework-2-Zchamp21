@@ -1,3 +1,5 @@
+const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+
 import TodoItemsList from './TodoItemsList.js';
 import React, { useEffect, useState } from 'react';
 import styles from '../styles/TodoItems.module.css';
@@ -41,7 +43,7 @@ export default function TodoItems({ topFormVisible, bottomFormVisible, toggleTop
     const addNewTask = async () => {
       if (nextTask) {
         try {
-          const response = await fetch(API_ENDPOINT, {
+          const response = await fetch(backend_base + '/todoItems', {
             'method': 'POST',
             'headers': {
               'x-apikey': API_KEY,

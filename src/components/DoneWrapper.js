@@ -1,3 +1,5 @@
+const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+
 import React, { useState, useEffect } from 'react';
 import DoneItemsList from './DoneItemsList';
 
@@ -16,7 +18,7 @@ export default function DoneWrapper() {
     const markIncomplete = async () => {
       if (incompleteTask[0]) {
         try {
-          const response = await fetch(API_ENDPOINT + `/${incompleteTask[0]}`, {
+          const response = await fetch(backend_base + `/todoItems/${incompleteTask[0]}`, {
             'method': 'PATCH',
             'headers': {
               'x-apikey': API_KEY,
@@ -41,7 +43,7 @@ export default function DoneWrapper() {
   useEffect(() => {
     const getDoneTasks = async () => {
       try {
-        const response = await fetch(DONE_API_ENDPOINT, {
+        const response = await fetch(backend_base + '/done', {
           'method': 'GET',
           'headers': {
             'x-apikey': API_KEY

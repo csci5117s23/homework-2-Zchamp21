@@ -1,4 +1,5 @@
 // import 'purecss';
+const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
 import React, { useEffect, useState } from "react";
 import styles from '../styles/Todos.module.css';
@@ -40,7 +41,7 @@ export default function Form({ isVisible, cancelForm, addTask }) {
     const fetchSubjects = async () => {
       // console.log('rendering')
       try {
-        const response = await fetch(API_ENDPOINT, {
+        const response = await fetch(backend_base + '/subjects', {
           'method': 'GET',
           'headers': {'x-apikey': API_KEY}
         });

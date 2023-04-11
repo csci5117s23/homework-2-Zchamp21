@@ -1,4 +1,4 @@
-
+const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
 // TODO: Finish this wrapper.
 export default function FormWrapper() {
@@ -63,7 +63,7 @@ async function getAllSubjects() {
 
 
   try {
-    const response = await fetch(API_ENDPOINT, {
+    const response = await fetch(backend_base + '/subjects', {
       'method': 'GET',
       'headers': {'x-apikey': API_KEY}
     });

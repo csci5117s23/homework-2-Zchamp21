@@ -1,3 +1,5 @@
+const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+
 import React, { useState, useEffect } from 'react';
 import TodoItemsList from './TodoItemsList';
 import OverdueItemsList from './OverdueItemsList';
@@ -22,7 +24,7 @@ export default function TodoListWrapper({ uploadedTask }) {
       // Only run if there is a task to be completed.
       if (completeTask[0]) {
         try {
-          const response = await fetch(API_ENDPOINT + `/${completeTask[0]}`, {
+          const response = await fetch(backend_base + `/todoItems/${completeTask[0]}`, {
             'method': 'PATCH',
             'headers': {
               'x-apikey': API_KEY,
@@ -46,7 +48,7 @@ export default function TodoListWrapper({ uploadedTask }) {
   useEffect(() => {
     const getUpcomingTasks = async () => {
       try {
-        const response = await fetch(UPCOMING_API_ENDPOINT, {
+        const response = await fetch(backend_base + '/upcoming', {
           'method': 'GET',
           'headers': {
             'x-apikey': API_KEY
@@ -66,7 +68,7 @@ export default function TodoListWrapper({ uploadedTask }) {
   useEffect(() => {
     const getOverdueTasks = async () => {
       try {
-        const response = await fetch(OVERDUE_API_ENDPOINT, {
+        const response = await fetch(backend_base + '/overdue', {
           'method': 'GET',
           'headers': {
             'x-apikey': API_KEY

@@ -1,3 +1,5 @@
+const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import MyDate from '@/components/MyDate';
@@ -25,11 +27,11 @@ export default function Task(props) {
 }
 
 async function getTaskData() {
-  const API_ENDPOINT='https://backend-8s2l.api.codehooks.io/dev/todoItems';
+  // const API_ENDPOINT='https://backend-8s2l.api.codehooks.io/dev/todoItems';
   const API_KEY = 'bc7dbf5b-09a7-4d58-bb83-ca430aaae411';
 
   try {
-    const response = await fetch(API_ENDPOINT, {
+    const response = await fetch(backend_base + '/todoItems', {
       'method': 'GET',
       'headers': {
         'x-apikey': API_KEY
