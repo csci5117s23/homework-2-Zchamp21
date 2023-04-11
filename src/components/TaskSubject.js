@@ -100,8 +100,8 @@ export default function TaskSubject({ taskId, subject, subjectColor }) {
             <option value=''>Select Subject</option>
             {subjectsList}
           </select>
-          <button className={styles.updateSubjButton} type='submit'>Update</button>
-          <button className={styles.updateSubjButton} onClick={showEdit}>Cancel</button>
+          <button className={`${styles.updateSubjButton} pure-button pure-button-primary`} type='submit'>Update</button>
+          <button className={`${styles.updateSubjButton} pure-button`} onClick={showEdit}>Cancel</button>
         </form>
       </div>
     )

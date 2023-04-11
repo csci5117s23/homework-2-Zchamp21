@@ -113,8 +113,8 @@ export default function TaskTitle({ id, title, subjectColor,  isDone, onClick })
       <form onSubmit={handleSubmit}>
         <input type='text' className={styles.titleInput} id='title' name='title' required defaultValue={curTitle}></input>
         <br></br>
-        <button className={styles.updateTitleButton} type='submit'>Update</button>
-        <button className={styles.updateTitleButton} onClick={showEdit}>Cancel</button>
+        <button className={`${styles.updateTitleButton} pure-button pure-button-primary`} type='submit'>Update</button>
+        <button className={`${styles.updateTitleButton} pure-button`} onClick={showEdit}>Cancel</button>
       </form>
     </div>
   ) : (

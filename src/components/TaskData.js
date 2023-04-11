@@ -1,6 +1,8 @@
 import TaskSubject from "./TaskSubject";
 import TaskDate from "./TaskDate";
 import styles from '../styles/IndividualTask.module.css';
+import FilterList from "./FilterList";
+import GoBack from "./GoBack";
 
 export default function TaskData({ data }) {
   let curDate = new Date(data.dueDate);
@@ -26,8 +28,11 @@ export default function TaskData({ data }) {
 
   return (
     <div className={`${styles.taskData} pure-u-7-24`}>
+      <GoBack></GoBack>
       <TaskSubject taskId={data.id} subject={data.subject} subjectColor={data.subjectColor}></TaskSubject>
       <TaskDate taskId={data.id} date={data.dueDate} isOverdue={isOverdue}></TaskDate>
+      {/* <br></br>
+      <FilterList curPage=''></FilterList> */}
     </div>
   )
 }

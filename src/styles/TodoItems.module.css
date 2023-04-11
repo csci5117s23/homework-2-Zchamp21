@@ -87,6 +87,14 @@
   color: royalblue;
 }
 
+.titleLinkSpan a {
+  color: black;
+}
+
+.titleLink:hover {
+  color: royalblue;
+}
+
 @media screen and (max-width: 64em) {
   .todayDiv,
   .todoItem {

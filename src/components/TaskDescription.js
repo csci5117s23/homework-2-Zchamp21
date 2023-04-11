@@ -54,8 +54,8 @@ export default function TaskDescription({ id, description }) {
       <form onSubmit={handleSubmit}>
         <textarea className={styles.descriptionInput} id='description' name='description' required defaultValue={curDescription}></textarea>
         <br></br>
-        <button className={styles.updateDescriptionButton} type='submit'>Update</button>
-        <button className={styles.updateDescriptionButton} onClick={showEdit}>Cancel</button>
+        <button className={`${styles.updateDescriptionButton} pure-button pure-button-primary`} type='submit'>Update</button>
+        <button className={`${styles.updateDescriptionButton} pure-button`} onClick={showEdit}>Cancel</button>
       </form>
     </div>
   ) : (

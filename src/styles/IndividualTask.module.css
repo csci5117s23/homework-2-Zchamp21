@@ -15,12 +15,14 @@
   margin: 1em;
 }
 
+.editDescription,
 .editTitle,
 .editDate,
 .editSubject {
   float: right;
 }
 
+.editDescription:hover,
 .editTitle:hover,
 .editDate:hover,
 .editSubject:hover {
@@ -28,12 +30,14 @@
   color: royalblue;
 }
 
+.updateDescriptionButton,
 .updateTitleButton,
 .updateDateButton,
 .updateSubjButton {
   margin-left: 1em;
 }
 
+.updateDescriptionButton:hover,
 .updateTitleButton:hover,
 .updateDateButton:hover,
 .updateSubjButton:hover {
@@ -58,18 +62,61 @@
   margin-top: 1em;
 }
 
+.description {
+  font-size: x-large;
+}
+
 .editTitle {
   font-size: xx-large;
   margin-right: 0.75em;
   /* margin-top: 0.5em; */
 }
 
+.editDescription {
+  font-size: x-large;
+  margin-right: 0.75em;
+}
+
+.descriptionDiv,
 .titleDiv {
   margin: 0.5em;
 }
 
+.titleDiv {
+  margin-bottom: 1.25em;
+  padding-bottom: 1em;
+  border-bottom: 1px solid;
+}
+
+.descriptionInput,
 .titleInput {
   width: 95%;
   /* height: 5em; */
   margin: 1em;
 }
+
+.goBack {
+  font-size: x-large;
+  /* color: black; */
+  margin: 0.5em;
+  /* padding-top: 0.5em; */
+}
+
+.goBackSpan a {
+  color: black;
+}
+
+.goBackIcon {
+  padding: 0 0.25em;
+  border-radius: 50%;
+}
+
+.goBackSpan:hover .goBackIcon {
+  background-color: royalblue;
+  color: white;
+}
+
+.goBackSpan:hover .goBackText {
+  color: royalblue;
+}
+

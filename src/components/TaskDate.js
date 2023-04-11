@@ -104,8 +104,8 @@ export default function TaskDate({ taskId, date, isOverdue }) {
     <div className={styles.dateFormDiv}>
       <form onSubmit={handleSubmit}>
         <input className={styles.dateInput} type='date' id='date' name='date' required defaultValue={todayStr} min={todayStr}></input>
-        <button className={styles.updateDateButton} type='submit'>Update</button>
-        <button className={styles.updateDateButton} onClick={showEdit}>Cancel</button>
+        <button className={`${styles.updateDateButton} pure-button pure-button-primary`} type='submit'>Update</button>
+        <button className={`${styles.updateDateButton} pure-button`} onClick={showEdit}>Cancel</button>
       </form>
     </div>
   ) : (

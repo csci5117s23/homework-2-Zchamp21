@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 // import styles from '../styles/TodoItems.module.css';
 import MyDate from './MyDate.js';
+import Link from 'next/link';
 
 // TODO: Maybe add an isDone prop when creating the 'done' page.
 // TODO: Also modify the state variables, since when the 'done' page is added,
@@ -57,7 +58,7 @@ export default function TodoItem({ id, title, subject, subjectColor, date, isOve
 
   // Set a default for the title of the to-do item.
   let newTitle = (
-    <span>{title}</span>
+    <span className={styles.titleLinkSpan}><Link href={`/todos/${id}`}><span className={styles.titleLink}>{title}</span></Link></span>
   );
 
   // Overwrite the default checkbox and title depending on the value of isDone.
