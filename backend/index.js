@@ -26,10 +26,11 @@ const subjectsYup = object({
 // TODO: Make sure this still works past midnight
 async function getUpcoming(req, res) {
   let today = new Date();
+  today.setHours(0, 0, 0, 0);
 
-  let year = today.getFullYear();
-  let month = today.getMonth();
-  let day = today.getDate();
+  // let year = today.getFullYear();
+  // let month = today.getMonth();
+  // let day = today.getDate();
   // if (month < 10) {
   //   month = `0${month}`;
   // }
@@ -40,12 +41,12 @@ async function getUpcoming(req, res) {
   // let newDate = new Date(todayStr);
   // today.setHours(0, 0, 0, 0);
   // day-1 because for some reason, without that, it is a day off.
-  today = new Date(year, month, day-1, 0, 0, 0, 0);
-  let newDate = new Date(today.toISOString());
-  let utcToday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+  // today = new Date(year, month, day-1, 0, 0, 0, 0);
+  // let newDate = new Date(today.toISOString());
+  // let utcToday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
 
   const conn = await Datastore.open();
-  const query = {$and: [{"dueDate": {$gte: newDate}}, {"isDone": false}]};
+  const query = {$and: [{"dueDate": {$gte: today.toISOString()}}, {"isDone": false}]};
   // const query = {$and: [{"dueDate": newDate}, {"isDone": false}]};
   const options = {
     filter: query,
@@ -56,17 +57,18 @@ async function getUpcoming(req, res) {
 
 async function getOverdue(req, res) {
   let today = new Date();
+  today.setHours(0, 0, 0, 0);
 
-  let year = today.getFullYear();
-  let month = today.getMonth();
-  let day = today.getDate();
+  // let year = today.getFullYear();
+  // let month = today.getMonth();
+  // let day = today.getDate();
   // today.setHours(0, 0, 0, 0);
-  today = new Date(year, month, day-1, 0, 0, 0, 0);
-  let newDate = new Date(today.toISOString());
-  let utcToday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+  // today = new Date(year, month, day-1, 0, 0, 0, 0);
+  // let newDate = new Date(today.toISOString());
+  // let utcToday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
 
   const conn = await Datastore.open();
-  const query = {$and: [{"dueDate": {$lt: newDate}}, {"isDone": false}]};
+  const query = {$and: [{"dueDate": {$lt: today.toISOString()}}, {"isDone": false}]};
   const options = {
     filter: query,
     sort: {"dueDate": 1}
