@@ -96,21 +96,27 @@ export default function Form({ isVisible, cancelForm, addTask }) {
     const formJson = Object.fromEntries(formData.entries());
     console.log(formJson);
     let subj = findSingleSubject(formJson.subject);
-    console.log('subj: ', subj);
-    console.log('color: ', subj.color);
-    console.log('title: ', subj.title);
+    // console.log('subj: ', subj);
+    // console.log('color: ', subj.color);
+    // console.log('title: ', subj.title);
     
-    console.log('subject data: ', curSubject);
+    // console.log('subject data: ', curSubject);
     console.log('submitting date: ', formJson.date);
+    // console.log('updated date: ', new Date(formJson.date.replace(/-/g, '\/')));
+    let newDate = new Date(formJson.date.replace(/-/g, '\/'));
+    console.log('new date: ', newDate.toLocaleString("en-US", {timeZone: "America/Chicago"}));
+    let today = new Date(); today.setHours(0, 0, 0, 0);
+    console.log('today: ', today.toLocaleString("en-US", {timeZone: "America/Chicago"}));
 
     let newTask = {
       title: formJson.title,
       description: formJson.description,
       subject: subj.title,
       subjectColor: subj.color,
-      dueDate: formJson.date,
+      dueDate: newDate.toISOString(),
       isDone: false
     };
+    //! Uncomment me!//
     addTask(newTask);
     setId(id + 1);
 

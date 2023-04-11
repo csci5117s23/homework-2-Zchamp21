@@ -27,6 +27,7 @@ const subjectsYup = object({
 async function getUpcoming(req, res) {
   let today = new Date();
   today.setHours(0, 0, 0, 0);
+  // today = today.toLocaleString("en-US", {timeZone: "America/Chicago"});
 
   // let year = today.getFullYear();
   // let month = today.getMonth();
@@ -58,22 +59,15 @@ async function getUpcoming(req, res) {
 async function getOverdue(req, res) {
   let today = new Date();
   today.setHours(0, 0, 0, 0);
-
-  // let year = today.getFullYear();
-  // let month = today.getMonth();
-  // let day = today.getDate();
-  // today.setHours(0, 0, 0, 0);
-  // today = new Date(year, month, day-1, 0, 0, 0, 0);
-  // let newDate = new Date(today.toISOString());
+  // today = today.toLocaleString("en-US", {timeZone: "America/Chicago"});
   // let utcToday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
-
   const conn = await Datastore.open();
   const query = {$and: [{"dueDate": {$lt: today.toISOString()}}, {"isDone": false}]};
   const options = {
     filter: query,
     sort: {"dueDate": 1}
   }
-  conn.getMany('todoItems', options).json(res);
+  conn.getMany('todoItems', options).json(res); 
 }
 
 async function getDone(req, res) {
