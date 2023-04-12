@@ -66,9 +66,11 @@ export default function TodoItem({ id, title, subject, subjectColor, date, isOve
   // Otherwise, the defaults assigned above are used.
   if (isClicked) {
     checkbox = (
-      <div className={styles.checkboxDiv} onClick={handleClick} onTouchStart={handleTouch}>
-        <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={hollowFaCircle} style={{color: subjectColor,}} /></span>
-        <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={solidFaCircleCheck} style={{color: subjectColor, opacity: '0.5'}}/></span>
+      <div className={styles.checkboxDiv}>
+        <span className={styles.hoverSpan} onClick={handleClick} onMouseEnter={handleMouseHover} onMouseLeave={handleMouseHover} onTouchStart={handleTouch}>
+          <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={hollowFaCircle} style={{color: subjectColor,}} /></span>
+          <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={solidFaCircleCheck} style={{color: subjectColor, opacity: '0.5'}}/></span>
+        </span>
       </div>
     );
 

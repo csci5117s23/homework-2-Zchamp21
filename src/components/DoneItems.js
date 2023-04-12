@@ -8,16 +8,16 @@ import Form from './Form.js';
 import DoneItemsList from './DoneItemsList.js';
 import DoneWrapper from './DoneWrapper.js';
 
-export default function TodoItems() {
-  const [upcomingTasks, setUpcomingTasks] = useState([]);
+export default function DoneItems({ subjectDeleteTracker }) {
+  // const [upcomingTasks, setUpcomingTasks] = useState([]);
 
-  function addTask(newTask) {
-    setUpcomingTasks(upcomingTasks.concat(newTask));
-  }
+  // function addTask(newTask) {
+  //   setUpcomingTasks(upcomingTasks.concat(newTask));
+  // }
   
   return (
     <div className='pure-u-1 pure-u-lg-4-5'>
-      <DoneWrapper tasks={upcomingTasks}></DoneWrapper>
+      <DoneWrapper subjectDeleteTracker={subjectDeleteTracker}></DoneWrapper>
     </div>
   );
 }

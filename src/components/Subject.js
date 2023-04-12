@@ -33,7 +33,7 @@ export default function Subject({ subjId, name, color, page, isActive, deleteSub
   return (
     <>
       <div className={`${styles.subject} pure-g`}>
-        <div className='pure-u-22-24'>
+        <div className='pure-u-21-24'>
           <Link className={styles.subjectLinks} href={`/${page}/subjects/${subjId}`}>
             {icon} {name}
           </Link>
