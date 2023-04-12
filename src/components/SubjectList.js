@@ -6,7 +6,7 @@ import Subject from "./Subject";
 import { useRouter } from "next/router";
 
 
-export default function SubjectList({ uploadedSubject, curPage, subjects, loading }) {
+export default function SubjectList({ uploadedSubject, curPage, subjects, loading, deleteSubject }) {
   if (loading) {
     return <h2>LOADING SUBJECTS...</h2>
   } else {
@@ -19,6 +19,7 @@ export default function SubjectList({ uploadedSubject, curPage, subjects, loadin
           color={subject.color}
           page={curPage}
           isActive={false}
+          deleteSubject={deleteSubject}
         ></Subject>
     )
 

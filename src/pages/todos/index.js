@@ -27,8 +27,10 @@ export default function Todos() {
   const [topFormVisible, setTopFormVisible] = useState(false);
   const [bottomFormVisible, setBottomFormVisible] = useState(false);
   const [uploadedSubject, setUploadedSubject] = useState(null);
-  const [subjects, setSubjects] = useState([defaultSubject]);
+  const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [subjectDeleteTracker, setSubjectDeleteTracker] = useState(true);
+  console.log('subject del tracker in todos: ', subjectDeleteTracker);
 
   const { isSignedIn, user } = useUser();
   const { isLoaded, userId, sessionId, getToken } = useAuth();
@@ -65,7 +67,9 @@ export default function Todos() {
             }
           });
           const data = await response.json();
-          setSubjects(subjects.concat(data));
+
+          let defaultSubjectsList = [defaultSubject]
+          setSubjects(defaultSubjectsList.concat(data));
           setLoading(false);
         }
       } catch (error) {
@@ -94,14 +98,20 @@ export default function Todos() {
             subjects={subjects}
             setSubjects={setSubjects}
             loading={loading}
+            subjectDeleteTracker={subjectDeleteTracker}
+            setSubjectDeleteTracker={setSubjectDeleteTracker}
           ></Navigation>
           <TodoItems 
             topFormVisible={topFormVisible} 
             bottomFormVisible={bottomFormVisible} 
             toggleTopForm={toggleTopForm}
             toggleBottomForm={toggleBottomForm}
-            uploadedSubject={uploadedSubject}>
-          </TodoItems>
+            uploadedSubject={uploadedSubject}
+            subjects={subjects}
+            setSubjects={setSubjects}
+            loading={loading}
+            subjectDeleteTracker={subjectDeleteTracker}
+          ></TodoItems>
         </div>
       </SignedIn>
       <SignedOut>

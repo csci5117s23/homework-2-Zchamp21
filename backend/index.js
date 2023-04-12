@@ -118,6 +118,23 @@ async function getDone(req, res) {
   conn.getMany('todoItems', options).json(res);
 }
 
+async function updateTodos(req, res) {
+  let subjId = req.body.origSubjId;
+  let userId = req.user_token.sub;
+
+  const conn = await Datastore.open();
+  const options = {
+    filter: {$and: [{"subjectId": subjId}, {"user": userId}]}
+  };
+  const doc = {
+    $set: {subject: req.body.subject, subjectColor: req.body.subjectColor, subjectId: req.body.subjectId}
+  };
+
+  const data = await conn.updateMany('todoItems', doc, options);
+  res.json(data);
+}
+app.patch('/updateTodos', updateTodos);
+
 // async function deleteOne(req, res) {
 //   const conn = await Datastore.open();
 //   const query = {

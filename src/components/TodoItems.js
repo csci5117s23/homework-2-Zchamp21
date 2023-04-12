@@ -10,7 +10,7 @@ import Form from './Form.js';
 import TodoListWrapper from './TodoListWrapper.js';
 import { useAuth } from '@clerk/nextjs';
 
-export default function TodoItems({ topFormVisible, bottomFormVisible, toggleTopForm, toggleBottomForm, uploadedSubject }) {
+export default function TodoItems({ topFormVisible, bottomFormVisible, toggleTopForm, toggleBottomForm, uploadedSubject, subjects, setSubjects, loading, subjectDeleteTracker }) {
   const API_ENDPOINT = 'https://backend-8s2l.api.codehooks.io/dev/todoItems';
   const API_KEY = 'bc7dbf5b-09a7-4d58-bb83-ca430aaae411';
 
@@ -103,13 +103,13 @@ export default function TodoItems({ topFormVisible, bottomFormVisible, toggleTop
   
   return (
     <div className='pure-u-1 pure-u-lg-4-5'>
-      <Form isVisible={topFormVisible} cancelForm={toggleTopForm} addTask={addTask} uploadedSubject={uploadedSubject}></Form>
+      <Form isVisible={topFormVisible} cancelForm={toggleTopForm} addTask={addTask} uploadedSubject={uploadedSubject} subjects={subjects} setSubjects={setSubjects} loading={loading}></Form>
       <Today></Today>
-      <TodoListWrapper uploadedTask={uploadedTask}></TodoListWrapper>
+      <TodoListWrapper uploadedTask={uploadedTask} subjectDeleteTracker={subjectDeleteTracker}></TodoListWrapper>
       {/* <OverdueItemsList></OverdueItemsList>
       <TodoItemsList tasks={upcomingTasks}></TodoItemsList> */}
       <AddTask formVisible={bottomFormVisible} showForm={toggleBottomForm}></AddTask>
-      <Form isVisible={bottomFormVisible} cancelForm={toggleBottomForm} addTask={addTask} uploadedSubject={uploadedSubject}></Form>
+      <Form isVisible={bottomFormVisible} cancelForm={toggleBottomForm} addTask={addTask} uploadedSubject={uploadedSubject} subjects={subjects} setSubjects={setSubjects} loading={loading}></Form>
     </div>
   );
 }

@@ -6,7 +6,7 @@ import styles from '../styles/Todos.module.css';
 import { useAuth } from "@clerk/nextjs";
 
 // TODO: Update so that subjects get updated when a new subject is created.
-export default function Form({ isVisible, cancelForm, addTask, uploadedSubject }) {
+export default function Form({ isVisible, cancelForm, addTask, uploadedSubject, subjects, setSubjects, loading }) {
   const API_ENDPOINT = 'https://backend-8s2l.api.codehooks.io/dev/subjects';
   const API_KEY = 'bc7dbf5b-09a7-4d58-bb83-ca430aaae411';
 
@@ -20,8 +20,8 @@ export default function Form({ isVisible, cancelForm, addTask, uploadedSubject }
   };
   
   const [id, setId] = useState(0);
-  const [subjects, setSubjects] = useState([defaultSubject]);
-  const [loading, setLoading] = useState(true);
+  // const [subjects, setSubjects] = useState([defaultSubject]);
+  // const [loading, setLoading] = useState(true);
   const [newTask, setNewTask] = useState({});
   const [curSubject, setCurSubject] = useState(null);
 
@@ -49,30 +49,30 @@ export default function Form({ isVisible, cancelForm, addTask, uploadedSubject }
   //   fetchSingleSubject();
   // }, [newTask]);
 
-  useEffect(() => {
-    const fetchSubjects = async () => {
-      // console.log('rendering')
-      try {
-        if (userId) {
-          const token = await getToken({ template: "codehooks" });
+  // useEffect(() => {
+  //   const fetchSubjects = async () => {
+  //     // console.log('rendering')
+  //     try {
+  //       if (userId) {
+  //         const token = await getToken({ template: "codehooks" });
           
-          const response = await fetch(backend_base + `/subjects?user=${userId}`, {
-            'method': 'GET',
-            'headers': {'Authorization': 'Bearer ' + token}
-          });
-          const data = await response.json();
-          setSubjects([defaultSubject]); // Reset the subjects array before concat.
-          // TODO: Change this to concatentation.
-          setSubjects(subjects.concat(data));
-          console.log('all subjects: ', data);
-          setLoading(false);
-        }
-      } catch(error) {
-        console.error('Error: ', error);
-      }
-    }
-    fetchSubjects();
-  }, [isLoaded, uploadedSubject]);
+  //         const response = await fetch(backend_base + `/subjects?user=${userId}`, {
+  //           'method': 'GET',
+  //           'headers': {'Authorization': 'Bearer ' + token}
+  //         });
+  //         const data = await response.json();
+  //         setSubjects([defaultSubject]); // Reset the subjects array before concat.
+  //         // TODO: Change this to concatentation.
+  //         setSubjects(subjects.concat(data));
+  //         console.log('all subjects: ', data);
+  //         setLoading(false);
+  //       }
+  //     } catch(error) {
+  //       console.error('Error: ', error);
+  //     }
+  //   }
+  //   fetchSubjects();
+  // }, [isLoaded, uploadedSubject]);
 
   function findSingleSubject(subjId) {
     console.log("subjects: ", subjects);

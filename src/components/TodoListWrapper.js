@@ -5,7 +5,7 @@ import TodoItemsList from './TodoItemsList';
 import OverdueItemsList from './OverdueItemsList';
 import { useAuth } from '@clerk/nextjs';
 
-export default function TodoListWrapper({ uploadedTask }) {
+export default function TodoListWrapper({ uploadedTask, subjectDeleteTracker }) {
   const UPCOMING_API_ENDPOINT = 'https://backend-8s2l.api.codehooks.io/dev/upcoming';
   const OVERDUE_API_ENDPOINT = 'https://backend-8s2l.api.codehooks.io/dev/overdue';
   const API_ENDPOINT='https://backend-8s2l.api.codehooks.io/dev/todoItems';
@@ -74,7 +74,7 @@ export default function TodoListWrapper({ uploadedTask }) {
       }
     }
     getUpcomingTasks();
-  }, [isLoaded, uploadedTask, completeTracker]);
+  }, [isLoaded, uploadedTask, completeTracker, subjectDeleteTracker]);
 
   useEffect(() => {
     const getOverdueTasks = async () => {
@@ -98,7 +98,7 @@ export default function TodoListWrapper({ uploadedTask }) {
       }
     }
     getOverdueTasks();
-  }, [isLoaded, completeTracker]);
+  }, [isLoaded, completeTracker, subjectDeleteTracker]);
 
   function handleComplete(id, completionStatus) {
     setCompleteTask([id, completionStatus]);
