@@ -3,6 +3,7 @@ const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 import MyDate from "./MyDate";
 import styles from '../styles/IndividualTask.module.css';
 import { useEffect, useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 
 export default function TaskDate({ taskId, date, isOverdue }) {
   const TODO_API_ENDPOINT = 'https://backend-8s2l.api.codehooks.io/dev/todoItems';
@@ -10,6 +11,8 @@ export default function TaskDate({ taskId, date, isOverdue }) {
 
   const [isEditing, setIsEditing] = useState(false);
   const [curDate, setCurDate] = useState(date);
+
+  const { isLoaded, userId, sessionId, getToken } = useAuth();
 
   function showEdit() {
     setIsEditing(!isEditing);
@@ -19,25 +22,29 @@ export default function TaskDate({ taskId, date, isOverdue }) {
     const updateDate = async () => {
       if (curDate != date) {
         try {
-          const response = await fetch(backend_base + `/todoItems/${taskId}`, {
-            'method': 'PATCH',
-            'headers': {
-              'x-apikey': API_KEY,
-              'Content-Type': 'application/json'
-            },
-            'body': JSON.stringify({
-              dueDate: new Date(curDate)
-            })
-          });
-          const result = await response.json();
-          console.log('Success: ', result);
+          if (userId) {
+            const token = await getToken({ template: "codehooks" });
+
+            const response = await fetch(backend_base + `/todoItems/${taskId}`, {
+              'method': 'PATCH',
+              'headers': {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+              },
+              'body': JSON.stringify({
+                dueDate: new Date(curDate)
+              })
+            });
+            const result = await response.json();
+            console.log('Success: ', result);
+          }
         } catch (error) {
           console.error('Error: ', error);
         }
       }
     }
     updateDate();
-  }, [curDate]);
+  }, [isLoaded, curDate]);
 
   // async function updateDate(newDate) {
   //   try {

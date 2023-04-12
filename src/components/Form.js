@@ -3,17 +3,29 @@ const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
 import React, { useEffect, useState } from "react";
 import styles from '../styles/Todos.module.css';
+import { useAuth } from "@clerk/nextjs";
 
 // TODO: Update so that subjects get updated when a new subject is created.
-export default function Form({ isVisible, cancelForm, addTask }) {
+export default function Form({ isVisible, cancelForm, addTask, uploadedSubject }) {
   const API_ENDPOINT = 'https://backend-8s2l.api.codehooks.io/dev/subjects';
   const API_KEY = 'bc7dbf5b-09a7-4d58-bb83-ca430aaae411';
+
+  // Create a default subject so tasks have a subject to go to
+  // when a subject is deleted.
+  let defaultSubject = {
+    "title": "Default Subject",
+    "color": "slategrey",
+    "user": "default",
+    "_id": "default"
+  };
   
   const [id, setId] = useState(0);
-  const [subjects, setSubjects] = useState(null);
+  const [subjects, setSubjects] = useState([defaultSubject]);
   const [loading, setLoading] = useState(true);
   const [newTask, setNewTask] = useState({});
   const [curSubject, setCurSubject] = useState(null);
+
+  const { isLoaded, userId, sessionId, getToken } = useAuth();
 
   // const [subjectList, setSubjectList] = useState([]);
 
@@ -41,22 +53,29 @@ export default function Form({ isVisible, cancelForm, addTask }) {
     const fetchSubjects = async () => {
       // console.log('rendering')
       try {
-        const response = await fetch(backend_base + '/subjects', {
-          'method': 'GET',
-          'headers': {'x-apikey': API_KEY}
-        });
-        const data = await response.json();
-        setSubjects(data);
-        console.log('all subjects: ', data);
-        setLoading(false);
+        if (userId) {
+          const token = await getToken({ template: "codehooks" });
+          
+          const response = await fetch(backend_base + `/subjects?user=${userId}`, {
+            'method': 'GET',
+            'headers': {'Authorization': 'Bearer ' + token}
+          });
+          const data = await response.json();
+          setSubjects([defaultSubject]); // Reset the subjects array before concat.
+          // TODO: Change this to concatentation.
+          setSubjects(subjects.concat(data));
+          console.log('all subjects: ', data);
+          setLoading(false);
+        }
       } catch(error) {
         console.error('Error: ', error);
       }
     }
     fetchSubjects();
-  }, []);
+  }, [isLoaded, uploadedSubject]);
 
   function findSingleSubject(subjId) {
+    console.log("subjects: ", subjects);
     for (let subject of subjects) {
       if (subject._id === subjId) {
         return subject;
@@ -114,11 +133,11 @@ export default function Form({ isVisible, cancelForm, addTask }) {
       subject: subj.title,
       subjectColor: subj.color,
       dueDate: newDate.toISOString(),
-      isDone: false
+      isDone: false,
+      user: userId
     };
-    //! Uncomment me!//
+    console.log("data to be submitted: ", newTask);
     addTask(newTask);
-    setId(id + 1);
 
     e.target.reset();
   }

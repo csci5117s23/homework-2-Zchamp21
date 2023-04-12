@@ -8,8 +8,9 @@ import AddTask from './AddTask.js';
 import OverdueItemsList from './OverdueItemsList.js';
 import Form from './Form.js';
 import TodoListWrapper from './TodoListWrapper.js';
+import { useAuth } from '@clerk/nextjs';
 
-export default function TodoItems({ topFormVisible, bottomFormVisible, toggleTopForm, toggleBottomForm }) {
+export default function TodoItems({ topFormVisible, bottomFormVisible, toggleTopForm, toggleBottomForm, uploadedSubject }) {
   const API_ENDPOINT = 'https://backend-8s2l.api.codehooks.io/dev/todoItems';
   const API_KEY = 'bc7dbf5b-09a7-4d58-bb83-ca430aaae411';
 
@@ -19,6 +20,8 @@ export default function TodoItems({ topFormVisible, bottomFormVisible, toggleTop
   const [nextTask, setNextTask] = useState(null);
   const [uploadedTask, setUploadedTask] = useState(null);
   // const [loading, setLoading] = useState(true);
+
+  const { isLoaded, userId, sessionId, getToken } = useAuth();
 
   // useEffect(() => {
   //   const getAllTasks = async () => {
@@ -42,28 +45,34 @@ export default function TodoItems({ topFormVisible, bottomFormVisible, toggleTop
   useEffect(() => {
     const addNewTask = async () => {
       if (nextTask) {
-        try {
-          const response = await fetch(backend_base + '/todoItems', {
-            'method': 'POST',
-            'headers': {
-              'x-apikey': API_KEY,
-              'Content-Type': 'application/json'
-            },
-            'body': JSON.stringify(nextTask)
-          });
+        if (userId) {
+          try {
+          
+            const token = await getToken({ template: "codehooks" });
+            console.log('token: ', token);
 
-          const result = await response.json();
-          console.log('Success: ', result);
-          // Update the state so that we can update the page in real time
-          // without performing another get request.
-          setUploadedTask(result);
-        } catch (error) {
+            const response = await fetch(backend_base + '/todoItems', {
+              'method': 'POST',
+              'headers': {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+              },
+              'body': JSON.stringify(nextTask)
+            });
+
+            const result = await response.json();
+            console.log('Success: ', result);
+            // Update the state so that we can update the page in real time
+            // without performing another get request.
+            setUploadedTask(result);
+          } catch (error) {
           console.error('Error: ', error);
+          } 
         }
       }
     }
     addNewTask();
-  }, [nextTask]);
+  }, [isLoaded, nextTask]);
 
   // useEffect(() => {
   //   const fetchSubjects = async () => {
@@ -94,13 +103,13 @@ export default function TodoItems({ topFormVisible, bottomFormVisible, toggleTop
   
   return (
     <div className='pure-u-1 pure-u-lg-4-5'>
-      <Form isVisible={topFormVisible} cancelForm={toggleTopForm} addTask={addTask}></Form>
+      <Form isVisible={topFormVisible} cancelForm={toggleTopForm} addTask={addTask} uploadedSubject={uploadedSubject}></Form>
       <Today></Today>
       <TodoListWrapper uploadedTask={uploadedTask}></TodoListWrapper>
       {/* <OverdueItemsList></OverdueItemsList>
       <TodoItemsList tasks={upcomingTasks}></TodoItemsList> */}
       <AddTask formVisible={bottomFormVisible} showForm={toggleBottomForm}></AddTask>
-      <Form isVisible={bottomFormVisible} cancelForm={toggleBottomForm} addTask={addTask}></Form>
+      <Form isVisible={bottomFormVisible} cancelForm={toggleBottomForm} addTask={addTask} uploadedSubject={uploadedSubject}></Form>
     </div>
   );
 }

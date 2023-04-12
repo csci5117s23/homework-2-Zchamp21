@@ -5,37 +5,55 @@ import styles from '../styles/IndividualTask.module.css';
 import { faCircle as solidFaCircle, faCircleCheck as solidFaCircleCheck} from '@fortawesome/free-solid-svg-icons';
 import { faCircle as hollowFaCircle, faCircleCheck as hollowFaCircleCheck} from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useAuth } from "@clerk/nextjs";
 
-export default function TaskSubject({ taskId, subject, subjectColor }) {
+export default function TaskSubject({ taskId, subject, subjectColor, setCurSubjectColor }) {
   const SUBJECT_API_ENDPOINT = 'https://backend-8s2l.api.codehooks.io/dev/subjects';
   const TODO_API_ENDPOINT = 'https://backend-8s2l.api.codehooks.io/dev/todoItems';
   const API_KEY = 'bc7dbf5b-09a7-4d58-bb83-ca430aaae411';
 
+  // Create a default subject so tasks have a subject to go to
+  // when a subject is deleted.
+  let defaultSubject = {
+    "title": "Default Subject",
+    "color": "slategrey",
+    "user": "default",
+    "_id": "default"
+  };
+
   const [isEditing, setIsEditing] = useState(false);
   // TODO: curSubject might need to move up a level.
   const [curSubject, setCurSubject] = useState([subject, subjectColor]);
-  const [subjects, setSubjects] = useState(null);
+  const [subjects, setSubjects] = useState([defaultSubject]);
   const [loading, setLoading] = useState(true);
+
+  const { isLoaded, userId, sessionId, getToken } = useAuth();
 
   useEffect(() => {
     const fetchSubjects = async () => {
       // console.log('rendering')
       try {
-        const response = await fetch(backend_base + '/subjects', {
-          'method': 'GET',
-          'headers': {
-            'x-apikey': API_KEY}
-        });
-        const data = await response.json();
-        setSubjects(data);
-        console.log('all subjects: ', data);
-        setLoading(false);
+        if (userId) {
+          const token = await getToken({ template: "codehooks" });
+
+          const response = await fetch(backend_base + `/subjects?user=${userId}`, {
+            'method': 'GET',
+            'headers': {
+              'Authorization': 'Bearer ' + token  
+            }
+          });
+          const data = await response.json();
+          setSubjects([defaultSubject]); // Reset the subjects array before concat.
+          setSubjects(subjects.concat(data));
+          console.log('all subjects: ', data);
+          setLoading(false);
+        }
       } catch(error) {
         console.error('Error: ', error);
       }
     }
     fetchSubjects();
-  }, []);
+  }, [isLoaded]);
 
   function showEdit() {
     setIsEditing(!isEditing);
@@ -49,21 +67,26 @@ export default function TaskSubject({ taskId, subject, subjectColor }) {
     }
   }
 
-  async function updateSubject(newSubject, newSubjectColor) {
+  async function updateSubject(newSubject, newSubjectColor, newSubjectId) {
     try {
-      const response = await fetch(backend_base + `/todoItems/${taskId}`, {
-        'method': 'PATCH',
-        'headers': {
-          'x-apikey': API_KEY,
-          'Content-Type': 'application/json'
-        },
-        'body': JSON.stringify({
-          subject: newSubject,
-          subjectColor: newSubjectColor
-        })
-      });
-      const result = await response.json();
-      console.log('Success: ', result);
+      if (userId) {
+        const token = await getToken({ template: "codehooks" });
+
+        const response = await fetch(backend_base + `/todoItems/${taskId}`, {
+          'method': 'PATCH',
+          'headers': {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          },
+          'body': JSON.stringify({
+            subject: newSubject,
+            subjectColor: newSubjectColor,
+            subjectId: newSubjectId
+          })
+        });
+        const result = await response.json();
+        console.log('Success: ', result);
+      }
     } catch (error) {
       console.error('Error: ', error);
     }
@@ -78,9 +101,10 @@ export default function TaskSubject({ taskId, subject, subjectColor }) {
 
     let subj = findSingleSubject(formJson.subject);
 
-    updateSubject(subj.title, subj.color);
+    updateSubject(subj.title, subj.color, subj._id);
     // Update the subject so the page can be updated in real time.
     setCurSubject([subj.title, subj.color]);
+    setCurSubjectColor(subj.color);
 
     setIsEditing(false);
     e.target.reset();

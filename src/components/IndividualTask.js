@@ -1,8 +1,11 @@
 import TaskData from "./TaskData";
 import TaskContent from "./TaskContent";
 import 'purecss';
+import { useState } from 'react';
 
 export default function IndividualTask({ task }) {
+  const [curSubjectColor, setCurSubjectColor] = useState(task.subjectColor);
+
   function handleClick() {
     console.log("Click!");
   }
@@ -18,14 +21,14 @@ export default function IndividualTask({ task }) {
     id: task._id,
     title: task.title,
     description: task.description,
-    subjectColor: task.subjectColor,
+    subjectColor: curSubjectColor,
     isDone: task.isDone,
     handleClick: handleClick
   }
 
   return (
     <div className='pure-g'>
-      <TaskData data={taskData}></TaskData>
+      <TaskData data={taskData} setCurSubjectColor={setCurSubjectColor}></TaskData>
       <TaskContent content={taskContent}></TaskContent>
     </div>
   )

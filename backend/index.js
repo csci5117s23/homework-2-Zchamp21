@@ -6,6 +6,7 @@
 import {Datastore, app} from 'codehooks-js'
 import {crudlify} from 'codehooks-crudlify'
 import { date, object, string, boolean } from 'yup';
+import jwtDecode from 'jwt-decode';
 
 const todoItemsYup = object({
   // user_id: string().required(),
@@ -13,41 +14,53 @@ const todoItemsYup = object({
   description: string(),
   subject: string().required(),
   subjectColor: string().required(),
+  subjectId: string(),
   dueDate: date().required(),
-  isDone: boolean().default(false)
+  isDone: boolean().default(false),
+  user: string().required()
 });
 
 const subjectsYup = object({
   title: string().required(),
   color: string().required(),
-  author: string().required()
+  user: string().required()
 });
+
+
 
 // TODO: Make sure this still works past midnight
 async function getUpcoming(req, res) {
+  let userId = req.user_token.sub;
+
   let today = new Date();
   today.setHours(0, 0, 0, 0);
+  let year = today.getUTCFullYear();
+  let month = today.getUTCMonth()+1;
+  let day = today.getUTCDate();
+  let monthStr = '';
+  let dayStr = '';
+  if (month < 10) {
+    monthStr = `0${month}`;
+  } else {
+    monthStr = month.toString();
+  }
+
+  if (day < 10) {
+    dayStr = `0${day}`;
+  } else {
+    dayStr = day.toString();
+  }
+
+  let todayStr = `${year}/${monthStr}/${dayStr}`;
+  let newToday = new Date(todayStr);
   // today = today.toLocaleString("en-US", {timeZone: "America/Chicago"});
 
-  // let year = today.getFullYear();
-  // let month = today.getMonth();
-  // let day = today.getDate();
-  // if (month < 10) {
-  //   month = `0${month}`;
-  // }
-  // if (day < 10) {
-  //   day = `0${day}`;
-  // }
-  // let todayStr = `${year}-${month}-${day}`;
-  // let newDate = new Date(todayStr);
-  // today.setHours(0, 0, 0, 0);
-  // day-1 because for some reason, without that, it is a day off.
-  // today = new Date(year, month, day-1, 0, 0, 0, 0);
   // let newDate = new Date(today.toISOString());
   // let utcToday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
 
   const conn = await Datastore.open();
-  const query = {$and: [{"dueDate": {$gte: today.toISOString()}}, {"isDone": false}]};
+  // const query = {$and: [{"dueDate":{$gte:{"$date":new Date()}}}, {"isDone": false}, {"user": userId}]};
+  const query = {$and: [{"dueDate": {$gte: newToday.toISOString()}}, {"isDone": false}, {"user": userId}]};
   // const query = {$and: [{"dueDate": newDate}, {"isDone": false}]};
   const options = {
     filter: query,
@@ -57,12 +70,36 @@ async function getUpcoming(req, res) {
 }
 
 async function getOverdue(req, res) {
+  let userId = req.user_token.sub;
+
   let today = new Date();
   today.setHours(0, 0, 0, 0);
+  let year = today.getUTCFullYear();
+  let month = today.getUTCMonth()+1;
+  let day = today.getUTCDate();
+  let monthStr = '';
+  let dayStr = '';
+  if (month < 10) {
+    monthStr = `0${month}`;
+  } else {
+    monthStr = month.toString();
+  }
+
+  if (day < 10) {
+    dayStr = `0${day}`;
+  } else {
+    dayStr = day.toString();
+  }
+
+  let todayStr = `${year}/${monthStr}/${dayStr}`;
+  let newToday = new Date(todayStr);
+  console.log('new today in backend: ', newToday);
+
   // today = today.toLocaleString("en-US", {timeZone: "America/Chicago"});
   // let utcToday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
   const conn = await Datastore.open();
-  const query = {$and: [{"dueDate": {$lt: today.toISOString()}}, {"isDone": false}]};
+  // const query = {$and: [{"dueDate":{$lt:{"$date":new Date()}}}, {"isDone": false}, {"user": userId}]};
+  const query = {$and: [{"dueDate": {$lt: newToday.toISOString()}}, {"isDone": false}, {"user": userId}]};
   const options = {
     filter: query,
     sort: {"dueDate": 1}
@@ -71,8 +108,9 @@ async function getOverdue(req, res) {
 }
 
 async function getDone(req, res) {
+  let userId = req.user_token.sub;
   const conn = await Datastore.open();
-  const query = {"isDone": true};
+  const query = {$and: [{"isDone": true}, {"user": userId}]};
   const options = {
     filter: query,
     sort: {"dueDate": 1}
@@ -112,14 +150,77 @@ app.get("/upcoming", getUpcoming);
 
 app.get("/overdue", getOverdue);
 
-app.get("/test", (req, res) => {
-  res.json({result: "you did it!"});
+const userAuth = async (req, res, next) => {
+  try {
+    const { authorization } = req.headers;
+    if (authorization) {
+      const token = authorization.replace('Bearer ', '');
+      const token_parsed = jwtDecode(token);
+      req.user_token = token_parsed;
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+app.use(userAuth);
+
+app.use('/upcoming', (req, res, next) => {
+  if (req.method === "GET") {
+    req.query.user = req.user_token.sub;
+  }
+  next();
 });
 
-// test route for https://<PROJECTID>.api.codehooks.io/dev/
-app.get('/', (req, res) => {
-  res.send('CRUD server ready')
+app.use('/overdue', (req, res, next) => {
+  if (req.method === "GET") {
+    req.query.user = req.user_token.sub;
+  }
+  next();
 })
+
+app.use('/subjects', (req, res, next) => {
+  if (req.method === "GET") {
+    req.query.user = req.user_token.sub;
+  }
+  next();
+});
+
+app.use('/todoItems', (req, res, next) => {
+  if (req.method === "POST") {
+    req.body.user = req.user_token.sub;
+  } else if (req.method === "GET") {
+    req.query.user = req.user_token.sub;
+  }
+  next();
+});
+
+app.use('/todoItems/:id', async (req, res, next) => {
+  const id = req.params.ID;
+  const userId = req.user_token.sub;
+
+  const conn = await Datastore.open();
+  try {
+    const task = await conn.getOne('todoItems', id);
+    if (task.user != userId) {
+      res.status(403).end();
+      return;
+    }
+  } catch (e) {
+    console.error(e);
+    res.status(404).end(e);
+    return;
+  }
+
+  next();
+});
+
+// app.use('/upcoming', (req, res, next) => {
+//   if (req.method === "GET") {
+//     req.query.user = req.user_token.sub;
+//   }
+//   next();
+// })
 
 // Use Crudlify to create a REST API for any collection
 crudlify(app, {

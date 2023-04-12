@@ -5,6 +5,7 @@ import { faCropSimple, faCircle as solidFaCircle, faCircleCheck as solidFaCircle
 import { faCircle as hollowFaCircle, faCircleCheck as hollowFaCircleCheck} from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from '../styles/IndividualTask.module.css';
+import { useAuth } from "@clerk/nextjs";
 
 export default function TaskTitle({ id, title, subjectColor,  isDone, onClick }) {
   const TODO_API_ENDPOINT = 'https://backend-8s2l.api.codehooks.io/dev/todoItems';
@@ -14,6 +15,9 @@ export default function TaskTitle({ id, title, subjectColor,  isDone, onClick })
   const [isClicked, setIsClicked] = useState(isDone);
   const [isEditing, setIsEditing] = useState(false);
   const [curTitle, setCurTitle] = useState(title);
+
+  const { isLoaded, userId, sessionId, getToken } = useAuth();
+
   function handleMouseHover() {
     setIsHovering(!isHovering);
   }
@@ -41,25 +45,29 @@ export default function TaskTitle({ id, title, subjectColor,  isDone, onClick })
     const updateTitle = async () => {
       if (curTitle != title) {
         try {
-          const response = await fetch(backend_base + `/todoItems/${id}`, {
-            'method': 'PATCH',
-            'headers': {
-              'x-apikey': API_KEY,
-              'Content-Type': 'application/json'
-            },
-            'body': JSON.stringify({
-              title: curTitle
-            })
-          });
-          const result = await response.json();
-          console.log('Success: ', result);
+          if (userId) {
+            const token = await getToken({ template: "codehooks" });
+
+            const response = await fetch(backend_base + `/todoItems/${id}`, {
+              'method': 'PATCH',
+              'headers': {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+              },
+              'body': JSON.stringify({
+                title: curTitle
+              })
+            });
+            const result = await response.json();
+            console.log('Success: ', result);
+          }
         } catch (error) {
           console.error('Error: ', error);
         }
       }
     }
     updateTitle();
-  }, [curTitle])
+  }, [isLoaded, curTitle])
 
   function handleSubmit(e) {
     e.preventDefault();

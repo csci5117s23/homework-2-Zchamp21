@@ -4,7 +4,7 @@ import styles from '../styles/IndividualTask.module.css';
 import FilterList from "./FilterList";
 import GoBack from "./GoBack";
 
-export default function TaskData({ data }) {
+export default function TaskData({ data, setCurSubjectColor }) {
   let curDate = new Date(data.dueDate);
 
   let year = curDate.getUTCFullYear();
@@ -29,7 +29,7 @@ export default function TaskData({ data }) {
   return (
     <div className={`${styles.taskData} pure-u-7-24`}>
       <GoBack></GoBack>
-      <TaskSubject taskId={data.id} subject={data.subject} subjectColor={data.subjectColor}></TaskSubject>
+      <TaskSubject taskId={data.id} subject={data.subject} subjectColor={data.subjectColor} setCurSubjectColor={setCurSubjectColor}></TaskSubject>
       <TaskDate taskId={data.id} date={data.dueDate} isOverdue={isOverdue}></TaskDate>
       {/* <br></br>
       <FilterList curPage=''></FilterList> */}

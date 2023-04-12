@@ -2,6 +2,7 @@ const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
 import { useState, useEffect } from "react";
 import styles from '../styles/IndividualTask.module.css';
+import { useAuth } from "@clerk/nextjs";
 
 export default function TaskDescription({ id, description }) {
   const TODO_API_ENDPOINT = 'https://backend-8s2l.api.codehooks.io/dev/todoItems';
@@ -9,6 +10,8 @@ export default function TaskDescription({ id, description }) {
 
   const [isEditing, setIsEditing] = useState(false);
   const [curDescription, setCurDescription] = useState(description);
+
+  const { isLoaded, userId, sessionId, getToken } = useAuth();
 
   function showEdit() {
     setIsEditing(!isEditing);
@@ -18,25 +21,29 @@ export default function TaskDescription({ id, description }) {
     const updateDescription = async () => {
       if (curDescription != description) {
         try {
-          const response = await fetch(backend_base + `/todoItems/${id}`, {
-            'method': 'PATCH',
-            'headers': {
-              'x-apikey': API_KEY,
-              'Content-Type': 'application/json'
-            },
-            'body': JSON.stringify({
-              description: curDescription
-            })
-          });
-          const result = await response.json();
-          console.log('Success: ', result);
+          if (userId) {
+            const token = await getToken({ template: "codehooks" });
+
+            const response = await fetch(backend_base + `/todoItems/${id}`, {
+              'method': 'PATCH',
+              'headers': {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+              },
+              'body': JSON.stringify({
+                description: curDescription
+              })
+            });
+            const result = await response.json();
+            console.log('Success: ', result);
+          }
         } catch (error) {
           console.error('Error: ', error);
         }
       }
     }
     updateDescription();
-  }, [curDescription]);
+  }, [isLoaded, curDescription]);
 
   function handleSubmit(e) {
     e.preventDefault();

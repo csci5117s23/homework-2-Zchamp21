@@ -26,7 +26,7 @@ export default function Home() {
 
   return (
     <>
-      <SignedOut>
+      {/* <SignedOut> */}
         {/* <SignIn></SignIn> */}
         <Head>
           <title>Welcome!</title>
@@ -36,10 +36,10 @@ export default function Home() {
           <main>
             <h1 className={styles.welcome}>Welcome to Zach's To-Do App!</h1>
             <br></br><br></br>
-            <h2>If you would like to make your own to-do list, please login <Link href='https://pumped-primate-55.accounts.dev/sign-in'>here</Link>!</h2>
+            <h2>If you would like to make your own to-do list, please login <Link href='/todos'>here</Link>!</h2>
           </main>
         </div>
-      </SignedOut>
+      {/* </SignedOut> */}
     </>
   );
 

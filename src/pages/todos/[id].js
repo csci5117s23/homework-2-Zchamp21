@@ -5,20 +5,51 @@ import React, { useEffect, useState } from 'react';
 import MyDate from '@/components/MyDate';
 import Header from '@/components/Header';
 import IndividualTask from '@/components/IndividualTask';
+import { useAuth } from '@clerk/nextjs';
 
 export default function Task() {
-  console.log('props: ', props);
+  const API_KEY = 'bc7dbf5b-09a7-4d58-bb83-ca430aaae411';
+  // console.log('props: ', props);
+  const [curTask, setCurTask] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  let { id } = router.query;
 
-  if (router.isFallback) {
-    return <h1>LOADING...</h1>
-  }
+  const { isLoaded, userId, sessionId, getToken } = useAuth();
+  // if (!id) {} // do nothing
+  // console.log('id: ', id);
+  // if (id) {
+  //   setTaskId(id);
+  // }
+
+  // return <p>Task: {id}</p>
+
+  // if (router.isFallback) {
+  //   return <h1>LOADING...</h1>
+  // }
 
   useEffect(() => {
     const getIndividualTask = async () => {
-      
+      try {
+        if (userId) {
+          const token = await getToken({ template: "codehooks"});
+
+          const response = await fetch(backend_base + `/todoItems/${id}`, {
+            'method': 'GET',
+            'headers': {
+              'Authorization': 'Bearer ' + token
+            }
+          });
+          const data = await response.json();
+          setCurTask(data);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error('Error: ', error);
+      }
     }
-  })
+    getIndividualTask();
+  }, [isLoaded, router]);
 
   return (
     <>
@@ -27,9 +58,13 @@ export default function Task() {
         page='individualTask'
         showTopForm=''
       ></Header>
-      <IndividualTask task={props.desiredTask}></IndividualTask>
+      {isLoading ? (
+        <h1>LOADING...</h1>
+      ) : (
+        <IndividualTask task={curTask}></IndividualTask>
+      )}
     </>
-  )
+  );
 }
 
 async function getTaskData() {
