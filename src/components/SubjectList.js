@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 
 
 export default function SubjectList({ uploadedSubject, curPage, subjects, loading, deleteSubject }) {
+  console.log('subjects in subject list: ', subjects);
   if (loading) {
     return <h2>LOADING SUBJECTS...</h2>
   } else {
