@@ -1,16 +1,17 @@
 const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
-import Header from '../components/Header.js';
-import Navigation from '../components/Navigation.js';
-import styles from '../styles/Todos.module.css';
-import filterStyles from '../styles/Filters.module.css';
+import Header from '@/components/Header.js';
+import Navigation from '@/components/Navigation.js';
+import styles from '@/styles/Todos.module.css';
+import filterStyles from '@/styles/Filters.module.css';
 import React, { useEffect, useState } from 'react';
-import TodoItems from '../components/TodoItems.js';
+import TodoItems from '@/components/TodoItems.js';
 import 'purecss/build/grids-responsive.css';
 import 'purecss/build/grids-responsive-min.css';
-import DoneItems from '../components/DoneItems.js';
-import { SignedIn, SignedOut, useAuth } from '@clerk/nextjs';
+import DoneItems from '@/components/DoneItems.js';
+import { SignedIn, SignedOut, useAuth, useUser } from '@clerk/nextjs';
 import { RedirectToSignIn } from '@clerk/clerk-react';
+import { useRouter } from 'next/router';
 // import { ClerkProvider, SignedIn, SignedOut, SignIn, useUser } from '@clerk/clerk-react';
 
 export default function Done() {
@@ -28,10 +29,21 @@ export default function Done() {
   const [loading, setLoading] = useState(true);
   const [subjectDeleteTracker, setSubjectDeleteTracker] = useState(true);
 
-  const { isLoaded, userId, sessionId, getToken } = useAuth();
+  // const { isLoaded, userId, sessionId, getToken } = useAuth();
   // const { isLoaded, isSignedIn, user } = useUser();
   // const [curUser, setCurUser] = useState(user);
   // console.log(curUser);
+
+  const { isSignedIn, user } = useUser();
+  const { isLoaded, userId, sessionId, getToken } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user) {
+      console.log('user: ', user);
+      router.push('/');
+    }
+  }, [user])
 
   function toggleTopForm() {
     setTopFormVisible(!topFormVisible);
@@ -93,9 +105,6 @@ export default function Done() {
           ></DoneItems>
         </div>
       </SignedIn>
-      <SignedOut>
-        <RedirectToSignIn></RedirectToSignIn>
-      </SignedOut>
     </>
     //   {/* </SignedIn>
     //   <SignedOut>

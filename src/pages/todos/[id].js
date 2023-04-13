@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import MyDate from '@/components/MyDate';
 import Header from '@/components/Header';
 import IndividualTask from '@/components/IndividualTask';
-import { useAuth } from '@clerk/nextjs';
+import { SignedIn, useAuth, useUser } from '@clerk/nextjs';
 
 export default function Task() {
   const API_KEY = 'bc7dbf5b-09a7-4d58-bb83-ca430aaae411';
@@ -16,7 +16,16 @@ export default function Task() {
   const router = useRouter();
   let { id } = router.query;
 
+  const { isSignedIn, user } = useUser();
   const { isLoaded, userId, sessionId, getToken } = useAuth();
+  // const router = useRouter();
+
+  // useEffect(() => {
+  //   if (!user) {
+  //     console.log('user: ', user);
+  //     router.push('/');
+  //   }
+  // }, [user])
   // if (!id) {} // do nothing
   // console.log('id: ', id);
   // if (id) {
@@ -25,9 +34,9 @@ export default function Task() {
 
   // return <p>Task: {id}</p>
 
-  // if (router.isFallback) {
-  //   return <h1>LOADING...</h1>
-  // }
+  if (router.isFallback) {
+    return <h1>LOADING...</h1>
+  }
 
   useEffect(() => {
     const getIndividualTask = async () => {
@@ -41,6 +50,10 @@ export default function Task() {
               'Authorization': 'Bearer ' + token
             }
           });
+          if (!response.ok) {
+            router.push('/404');
+            return;
+          }
           const data = await response.json();
           setCurTask(data);
           setCurTaskDone(data.isDone);
@@ -83,41 +96,47 @@ export default function Task() {
 
   return (
     <>
-      <Header
-        username='Zach'
-        page='individualTask'
-        showTopForm=''
-      ></Header>
-      {isLoading ? (
-        <h1>LOADING...</h1>
-      ) : (
-        <IndividualTask task={curTask} setComplete={updateIsDone}></IndividualTask>
-      )}
+      <SignedIn>
+        <Header
+          username='Zach'
+          page='individualTask'
+          showTopForm=''
+        ></Header>
+        {isLoading ? (
+          <h1>LOADING...</h1>
+        ) : (
+          <IndividualTask task={curTask} setComplete={updateIsDone}></IndividualTask>
+        )}
+      </SignedIn>
     </>
   );
 }
 
-async function getTaskData() {
-  // const API_ENDPOINT='https://backend-8s2l.api.codehooks.io/dev/todoItems';
-  const API_KEY = 'bc7dbf5b-09a7-4d58-bb83-ca430aaae411';
+// async function getTaskData() {
+//   // const API_ENDPOINT='https://backend-8s2l.api.codehooks.io/dev/todoItems';
+//   const API_KEY = 'bc7dbf5b-09a7-4d58-bb83-ca430aaae411';
 
-  try {
-    const response = await fetch(backend_base + '/todoItems', {
-      'method': 'GET',
-      'headers': {
-        'x-apikey': API_KEY
-      }
-    });
-    const data = await response.json();
-    // console.log('Getting data: ', data);
-    return data;
-    // setTask(data);
-    // setLoading(false);
-  } catch(error) {
-    console.error('Error: ', error);
-    return null;
-  }
-}
+//   try {
+//     if (userId) {
+//       const token = await getToken({ template: "codehooks" });
+
+//       const response = await fetch(backend_base + '/getAllTasks', {
+//         'method': 'GET',
+//         'headers': {
+//           'Authorization': 'Bearer ' + token
+//         }
+//       });
+//       const data = await response.json();
+//       console.log('Getting data: ', data);
+//       return data;
+//       // setTask(data);
+//       // setLoading(false);
+//     }
+//   } catch(error) {
+//     console.error('Error: ', error);
+//     // return null;
+//   }
+// }
 
 // export async function getStaticProps(context) {
 //   try {

@@ -8,7 +8,7 @@ import 'purecss/build/grids-responsive.css';
 import 'purecss/build/grids-responsive-min.css';
 import Header from "@/components/Header";
 import Navigation from "@/components/Navigation";
-import SubjectTodoItems from "@/components/SubjectTodoItems";
+import SubjectDoneItems from "@/components/SubjectDoneItems";
 
 export default function IndividualSubject() {
   const router = useRouter();
@@ -68,12 +68,12 @@ export default function IndividualSubject() {
       <SignedIn>
         <Header 
           username=''
-          page='todos'
+          page='done'
           showTopForm={toggleTopForm}
         ></Header>
         <div className='pure-g'>
           <Navigation 
-            curPage='todos' 
+            curPage='done' 
             uploadedSubject={uploadedSubject}
             setUploadedSubject={setUploadedSubject}
             subjects={subjects}
@@ -82,18 +82,10 @@ export default function IndividualSubject() {
             subjectDeleteTracker={subjectDeleteTracker}
             setSubjectDeleteTracker={setSubjectDeleteTracker}
           ></Navigation>
-          <SubjectTodoItems
+          <SubjectDoneItems
             id={subjId}
-            topFormVisible={topFormVisible} 
-            bottomFormVisible={bottomFormVisible} 
-            toggleTopForm={toggleTopForm}
-            toggleBottomForm={toggleBottomForm}
-            uploadedSubject={uploadedSubject}
-            subjects={subjects}
-            setSubjects={setSubjects}
-            loading={loading}
             subjectDeleteTracker={subjectDeleteTracker}
-          ></SubjectTodoItems>
+          ></SubjectDoneItems>
         </div>
       </SignedIn>
       <SignedOut>

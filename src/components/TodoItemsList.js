@@ -27,6 +27,10 @@ export default function TodoItemsList({ tasks, setCompleteTask }) {
       <div>{todoList}</div>
     </div>
   ) : (
-    <></>
+    <div>
+      <br></br>
+      <h2 className={styles.h2}>You have no upcoming tasks</h2>
+      <br></br><br></br>
+    </div>
   ));
 }

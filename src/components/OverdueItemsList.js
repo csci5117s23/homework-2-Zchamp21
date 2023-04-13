@@ -26,6 +26,9 @@ export default function OverdueItemsList({ tasks, setCompleteTask }) {
       <br></br>
     </div>
   ) : (
-    <></>
+    <div>
+      <h2 className={styles.h2}>You have no overdue tasks</h2>
+      <br></br>
+    </div>
   ));
 }

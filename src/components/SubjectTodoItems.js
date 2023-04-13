@@ -4,8 +4,10 @@ import { useAuth } from '@clerk/nextjs';
 import { useState, useEffect } from 'react';
 import Form from './Form';
 import SubjectTodosWrapper from './SubjectTodosWrapper';
+import Today from './Today';
+import AddTask from './AddTask';
 
-export default function SubjectTodoItems({ id, topFormVisible, bottomFormVisible, toggleTopForm, toggleBottomForm, uploadedSubject, subjects, setSubjects, loading, subjectDeleteTracker, router }) {
+export default function SubjectTodoItems({ id, topFormVisible, bottomFormVisible, toggleTopForm, toggleBottomForm, uploadedSubject, subjects, setSubjects, loading, subjectDeleteTracker }) {
   const [nextTask, setNextTask] = useState(null);
   const [uploadedTask, setUploadedTask] = useState(null);
 
@@ -59,8 +61,19 @@ export default function SubjectTodoItems({ id, topFormVisible, bottomFormVisible
         loading={loading}
         curSubjId={id}
       ></Form>
-
-      <SubjectTodosWrapper subjId={id} uploadedTask={uploadedTask} subjectDeleteTracker={subjectDeleteTracker} router={router}></SubjectTodosWrapper>
+      <Today></Today>
+      <SubjectTodosWrapper subjId={id} uploadedTask={uploadedTask} subjectDeleteTracker={subjectDeleteTracker}></SubjectTodosWrapper>
+      <AddTask formVisible={bottomFormVisible} showForm={toggleBottomForm}></AddTask>
+      <Form 
+        isVisible={bottomFormVisible} 
+        cancelForm={toggleBottomForm} 
+        addTask={addTask} 
+        uploadedSubject={uploadedSubject} 
+        subjects={subjects} 
+        setSubjects={setSubjects} 
+        loading={loading}
+        curSubjId={id}
+      ></Form>
     </div>
   )
 }

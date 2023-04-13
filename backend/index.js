@@ -55,6 +55,21 @@ async function getAllSubjectTasks(req, res) {
 }
 app.get('/getAllSubjectTasks', getAllSubjectTasks);
 
+async function getDoneSubjectTasks(req, res) {
+  let userId = req.user_token.sub;
+  let subjId = req.query.subjId;
+
+  const conn = await Datastore.open();
+  const query = {$and: [{"isDone": true}, {"subjectId": subjId}, {"user": userId}]};
+
+  const options = {
+    filter: query,
+    sort: {"dueDate": 1}
+  }
+  conn.getMany('todoItems', options).json(res);
+}
+app.get('/getDoneSubjectTasks', getDoneSubjectTasks);
+
 // TODO: Make sure this still works past midnight
 async function getUpcoming(req, res) {
   let userId = req.user_token.sub;
@@ -251,7 +266,7 @@ app.use('/todoItems/:id', async (req, res, next) => {
       return;
     }
   } catch (e) {
-    console.error(e);
+    console.error('Error: ', e);
     res.status(404).end(e);
     return;
   }

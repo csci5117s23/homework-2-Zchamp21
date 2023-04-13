@@ -17,6 +17,11 @@ import Home from '..';
 import { useRouter } from 'next/router';
 
 export default function Todos() {
+  // const { isLoaded, isSignedIn, user } = useUser();
+  // const router = useRouter();
+
+  
+
   const defaultSubject = {
     "title": "Default Subject",
     "color": "slategrey",
@@ -35,6 +40,13 @@ export default function Todos() {
   const { isSignedIn, user } = useUser();
   const { isLoaded, userId, sessionId, getToken } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    if (!user) {
+      console.log('user: ', user);
+      router.push('/');
+    }
+  }, [user])
 
   function toggleTopForm() {
     setTopFormVisible(!topFormVisible);
@@ -72,8 +84,6 @@ export default function Todos() {
   // TODO: Get rid of the username in the Header component.
   return (
     <>
-      {/* <ClerkProvider>
-        <SignedIn> */}
       <SignedIn>
         <Header 
           username=''
@@ -104,14 +114,6 @@ export default function Todos() {
           ></TodoItems>
         </div>
       </SignedIn>
-      <SignedOut>
-        <RedirectToSignIn></RedirectToSignIn>
-      </SignedOut>
-        {/* </SignedIn>
-        <SignedOut>
-          <SignIn />
-        </SignedOut>
-      </ClerkProvider> */}
     </>
   );
 }

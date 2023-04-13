@@ -5,7 +5,7 @@ import { useAuth } from '@clerk/nextjs';
 import TodoItemsList from './TodoItemsList';
 import OverdueItemsList from './OverdueItemsList';
 
-export default function SubjectTodosWrapper({ subjId, uploadedTask, subjectDeleteTracker, router }) {
+export default function SubjectTodosWrapper({ subjId, uploadedTask, subjectDeleteTracker }) {
   const [loadingUpcoming, setLoadingUpcoming] = useState(true);
   const [loadingOverdue, setLoadingOverdue] = useState(true);
   const [upcomingTasks, setUpcomingTasks] = useState([]);
@@ -13,25 +13,12 @@ export default function SubjectTodosWrapper({ subjId, uploadedTask, subjectDelet
 
   const [loadingTasks, setLoadingTasks] = useState(true);
   const [allTasks, setAllTasks] = useState([]);
-  const [resetTracker, setResetTracker] = useState(true);
   const [tracker, setTracker] = useState(0);
 
   const [completeTask, setCompleteTask] = useState(['', false]);
   const [completeTracker, setCompleteTracker] = useState(true);
 
   const { isLoaded, userId, sessionId, getToken } = useAuth();
-
-  const dynamicRoute = router.asPath;
-
-  // console.log('current subject id: ', subjId);
-
-  // useEffect(() => {
-  //   setAllTasks([]);
-  // }, [subjId]);
-
-  useEffect(() => {
-    setLoadingTasks(true);
-  }, [dynamicRoute]);
 
   useEffect(() => {
     const updateCompletionStatus = async () => {
@@ -116,7 +103,7 @@ export default function SubjectTodosWrapper({ subjId, uploadedTask, subjectDelet
       console.log('tasks: ', allTasks);
     }
     getAllTasks();
-  }, [isLoaded, subjId]);
+  }, [isLoaded]);
 
   useEffect(() => {
     const updateTasks = () => {
