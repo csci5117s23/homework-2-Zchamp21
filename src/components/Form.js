@@ -6,7 +6,7 @@ import styles from '../styles/Todos.module.css';
 import { useAuth } from "@clerk/nextjs";
 
 // TODO: Update so that subjects get updated when a new subject is created.
-export default function Form({ isVisible, cancelForm, addTask, uploadedSubject, subjects, setSubjects, loading }) {
+export default function Form({ isVisible, cancelForm, addTask, uploadedSubject, subjects, setSubjects, loading, curSubjId }) {
   const API_ENDPOINT = 'https://backend-8s2l.api.codehooks.io/dev/subjects';
   const API_KEY = 'bc7dbf5b-09a7-4d58-bb83-ca430aaae411';
 
@@ -109,6 +109,8 @@ export default function Form({ isVisible, cancelForm, addTask, uploadedSubject, 
   function handleSubmit(e) {
     e.preventDefault();
 
+    document.getElementById('subject').disabled = false;
+
     const form = e.target;
     const formData = new FormData(form);
 
@@ -132,6 +134,7 @@ export default function Form({ isVisible, cancelForm, addTask, uploadedSubject, 
       description: formJson.description,
       subject: subj.title,
       subjectColor: subj.color,
+      subjectId: subj._id,
       dueDate: newDate.toISOString(),
       isDone: false,
       user: userId
@@ -153,19 +156,30 @@ export default function Form({ isVisible, cancelForm, addTask, uploadedSubject, 
       (subject) =>
         <option key={subject._id} value={subject._id}>{subject.title}</option>
     );
+    
+    // let subjectsList = subjects.map(
+    //   (subject) => {
+    //     if (subject._id === curSubjId) {
+    //       return <option key={subject._id} value={subject._id} selected>{subject.title}</option>
+    //     } else {
+    //       return <option key={subject._id} value={subject._id}>{subject.title}</option>
+    //     }
+    //   }
+    // );
 
     let selectSubject;
-    if (subjectsList.length > 0) {
+    if (curSubjId) {
       selectSubject = (
-        <select name='subject' id='subject' required>
-          <option value=''>Select Subject</option>
+        <select name='subject' id='subject' disabled defaultValue={curSubjId}>
+          <option value='none' disabled hidden>Select Subject</option>
           {subjectsList}
         </select>
       );
     } else {
       selectSubject = (
-        <select name='subject' id='subject' required>
-          <option value=''>Please add a subject before making a post.</option>
+        <select name='subject' id='subject' required defaultValue='none'>
+          <option value='none' disabled hidden>Select Subject</option>
+          {subjectsList}
         </select>
       );
     }

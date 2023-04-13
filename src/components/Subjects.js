@@ -114,8 +114,9 @@ export default function Subjects({ uploadedSubject, setUploadedSubject, curPage,
 
   async function deleteSubject(subjId) {
     let deleteResp = await deleteFromSubjects(subjId);
+    console.log('delete respose: ', deleteResp);
     let modifyResp = await modifyTasks(subjId);
-    setSubjectDeleteTracker(!subjectDeleteTracker);
+    setSubjectDeleteTracker(deleteResp._id);
     console.log('subject delete tracker: ', subjectDeleteTracker);
     console.log('modify response: ', modifyResp);
   }

@@ -79,14 +79,14 @@
 .subject {
   font-size: x-large;
   padding-bottom: 0.5em;
-  /* width: 90%; */
   margin: auto;
 }
 
 .subjectLinks {
-  width: 100%;
+  width: 90%;
   display: block;
-  padding: 0.5em 1em;
+  margin: 0 0.25em;
+  padding: 0.5em 0.5em;
   color: black;
   border-radius: 0.5em;
 }

@@ -103,13 +103,29 @@ export default function TodoItems({ topFormVisible, bottomFormVisible, toggleTop
   
   return (
     <div className='pure-u-1 pure-u-lg-4-5'>
-      <Form isVisible={topFormVisible} cancelForm={toggleTopForm} addTask={addTask} uploadedSubject={uploadedSubject} subjects={subjects} setSubjects={setSubjects} loading={loading}></Form>
+      <Form 
+        isVisible={topFormVisible} 
+        cancelForm={toggleTopForm} 
+        addTask={addTask} 
+        uploadedSubject={uploadedSubject} 
+        subjects={subjects} 
+        setSubjects={setSubjects} 
+        loading={loading}
+      ></Form>
       <Today></Today>
       <TodoListWrapper uploadedTask={uploadedTask} subjectDeleteTracker={subjectDeleteTracker}></TodoListWrapper>
       {/* <OverdueItemsList></OverdueItemsList>
       <TodoItemsList tasks={upcomingTasks}></TodoItemsList> */}
       <AddTask formVisible={bottomFormVisible} showForm={toggleBottomForm}></AddTask>
-      <Form isVisible={bottomFormVisible} cancelForm={toggleBottomForm} addTask={addTask} uploadedSubject={uploadedSubject} subjects={subjects} setSubjects={setSubjects} loading={loading}></Form>
+      <Form 
+        isVisible={bottomFormVisible} 
+        cancelForm={toggleBottomForm} 
+        addTask={addTask} 
+        uploadedSubject={uploadedSubject} 
+        subjects={subjects} 
+        setSubjects={setSubjects} 
+        loading={loading}
+      ></Form>
     </div>
   );
 }

@@ -60,6 +60,7 @@
 .title {
   font-size: xx-large;
   margin-top: 1em;
+  padding-left: 0.5em;
 }
 
 .description {
@@ -120,3 +121,6 @@
   color: royalblue;
 }
 
+.hoverSpan:hover {
+  cursor: pointer;
+}

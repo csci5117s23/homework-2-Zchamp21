@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from '../styles/IndividualTask.module.css';
 import { useAuth } from "@clerk/nextjs";
 
-export default function TaskTitle({ id, title, subjectColor,  isDone, onClick }) {
+export default function TaskTitle({ id, title, subjectColor,  isDone, setComplete }) {
   const TODO_API_ENDPOINT = 'https://backend-8s2l.api.codehooks.io/dev/todoItems';
   const API_KEY = 'bc7dbf5b-09a7-4d58-bb83-ca430aaae411';
 
@@ -28,7 +28,7 @@ export default function TaskTitle({ id, title, subjectColor,  isDone, onClick })
 
   function handleClick() {
     setIsClicked(!isClicked);
-    onClick(id, !isDone);
+    setComplete();
   }
 
   function handleTouch() {
@@ -86,13 +86,17 @@ export default function TaskTitle({ id, title, subjectColor,  isDone, onClick })
   // If isHovering is true, then stack two icons to show a preview of a checked checkbox.
   // Otherwise, only use a circle icon which represents an un-checked checkbox.
   let checkbox = (isHovering ? (
-    <div className={styles.checkboxDiv} onClick={handleClick} onMouseEnter={handleMouseHover} onMouseLeave={handleMouseHover}>
-      <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={hollowFaCircle} style={{color: subjectColor,}} /></span>
-      <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={solidFaCircleCheck} style={{color: subjectColor, opacity: '0.5'}}/></span>
+    <div className={styles.checkboxDiv}>
+      <span className={styles.hoverSpan} onClick={handleClick} onMouseEnter={handleMouseHover} onMouseLeave={handleMouseHover}>
+        <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={hollowFaCircle} style={{color: subjectColor,}} /></span>
+        <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={solidFaCircleCheck} style={{color: subjectColor, opacity: '0.5'}}/></span>
+      </span>
     </div>
   ) : (
-    <div className={styles.checkboxDiv} onClick={handleClick} onMouseEnter={handleMouseHover} onMouseLeave={handleMouseHover} onTouchStart={handleTouch}>
-      <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={hollowFaCircle} style={{color: subjectColor,}} /></span>
+    <div className={styles.checkboxDiv}>
+      <span className={styles.hoverSpan} onClick={handleClick} onMouseEnter={handleMouseHover} onMouseLeave={handleMouseHover} onTouchStart={handleTouch}>
+        <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={hollowFaCircle} style={{color: subjectColor,}} /></span>
+      </span>
     </div>
   ));
 
@@ -106,9 +110,11 @@ export default function TaskTitle({ id, title, subjectColor,  isDone, onClick })
   // Otherwise, the defaults assigned above are used.
   if (isClicked) {
     checkbox = (
-      <div className={styles.checkboxDiv} onClick={handleClick} onTouchStart={handleTouch}>
-        <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={hollowFaCircle} style={{color: subjectColor,}} /></span>
-        <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={solidFaCircleCheck} style={{color: subjectColor, opacity: '0.5'}}/></span>
+      <div className={styles.checkboxDiv}>
+        <span className={styles.hoverSpan} onClick={handleClick} onMouseEnter={handleMouseHover} onMouseLeave={handleMouseHover} onTouchStart={handleTouch}>
+          <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={hollowFaCircle} style={{color: subjectColor,}} /></span>
+          <span className={styles.checkboxSpan}><FontAwesomeIcon className='fa-stack-1x' icon={solidFaCircleCheck} style={{color: subjectColor, opacity: '0.5'}}/></span>
+        </span>
       </div>
     );
 

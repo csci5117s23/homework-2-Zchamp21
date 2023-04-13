@@ -2,7 +2,7 @@ import styles from '../styles/IndividualTask.module.css';
 import TaskDescription from './TaskDescription';
 import TaskTitle from './TaskTitle';
 
-export default function TaskContent({ content }) {
+export default function TaskContent({ content, setComplete }) {
   return (
     <div className='pure-u-17-24'>
       <TaskTitle
@@ -10,7 +10,7 @@ export default function TaskContent({ content }) {
         title={content.title}
         subjectColor={content.subjectColor}
         isDone={content.isDone}
-        onClick={content.handleClick}
+        setComplete={setComplete}
       ></TaskTitle>
       <TaskDescription
         id={content.id}

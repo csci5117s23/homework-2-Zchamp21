@@ -12,6 +12,7 @@ export default function Task() {
   // console.log('props: ', props);
   const [curTask, setCurTask] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [curTaskDone, setCurTaskDone] = useState(false);
   const router = useRouter();
   let { id } = router.query;
 
@@ -32,7 +33,7 @@ export default function Task() {
     const getIndividualTask = async () => {
       try {
         if (userId) {
-          const token = await getToken({ template: "codehooks"});
+          const token = await getToken({ template: "codehooks" });
 
           const response = await fetch(backend_base + `/todoItems/${id}`, {
             'method': 'GET',
@@ -42,6 +43,7 @@ export default function Task() {
           });
           const data = await response.json();
           setCurTask(data);
+          setCurTaskDone(data.isDone);
           setIsLoading(false);
         }
       } catch (error) {
@@ -50,6 +52,34 @@ export default function Task() {
     }
     getIndividualTask();
   }, [isLoaded, router]);
+
+  useEffect(() => {
+    const changeCompleteStatus = async () => {
+      try {
+        if (userId) {
+          const token = await getToken({ template: "codehooks" });
+
+          const response = await fetch(backend_base + `/todoItems/${id}`, {
+            'method': 'PATCH',
+            'headers': {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json'
+            },
+            'body': JSON.stringify({isDone: curTaskDone})
+          });
+          const result = await response.json();
+          console.log('Success: ', result);
+        }
+      } catch (error) {
+        console.error('Error: ', error);
+      }
+    }
+    changeCompleteStatus();
+  }, [isLoaded, curTaskDone]);
+
+  function updateIsDone() {
+    setCurTaskDone(!curTaskDone);
+  }
 
   return (
     <>
@@ -61,7 +91,7 @@ export default function Task() {
       {isLoading ? (
         <h1>LOADING...</h1>
       ) : (
-        <IndividualTask task={curTask}></IndividualTask>
+        <IndividualTask task={curTask} setComplete={updateIsDone}></IndividualTask>
       )}
     </>
   );

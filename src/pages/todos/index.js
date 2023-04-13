@@ -29,22 +29,12 @@ export default function Todos() {
   const [uploadedSubject, setUploadedSubject] = useState(null);
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [subjectDeleteTracker, setSubjectDeleteTracker] = useState(true);
+  const [subjectDeleteTracker, setSubjectDeleteTracker] = useState('');
   console.log('subject del tracker in todos: ', subjectDeleteTracker);
 
   const { isSignedIn, user } = useUser();
   const { isLoaded, userId, sessionId, getToken } = useAuth();
   const router = useRouter();
-
-  // useEffect(() => {
-  //   if (!user) {
-  //     // console.log('user: ', user);
-  //     router.push('/');
-  //   }
-  // }, [user])
-  // const { isLoaded, isSignedIn, user } = useUser();
-  // const [curUser, setCurUser] = useState(user);
-  // console.log(curUser);
 
   function toggleTopForm() {
     setTopFormVisible(!topFormVisible);

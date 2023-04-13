@@ -26,7 +26,34 @@ const subjectsYup = object({
   user: string().required()
 });
 
+async function getAllTasks(req, res) {
+  let userId = req.user_token.sub;
 
+  const conn = await Datastore.open();
+  const query = {$and: [{"isDone": false}, {"user": userId}]};
+
+  const options = {
+    filter: query,
+    sort: {"dueDate": 1}
+  }
+  conn.getMany('todoItems', options).json(res);
+}
+app.get('/getAllTasks', getAllTasks);
+
+async function getAllSubjectTasks(req, res) {
+  let userId = req.user_token.sub;
+  let subjId = req.query.subjId;
+
+  const conn = await Datastore.open();
+  const query = {$and: [{"isDone": false}, {"subjectId": subjId}, {"user": userId}]};
+
+  const options = {
+    filter: query,
+    sort: {"dueDate": 1}
+  }
+  conn.getMany('todoItems', options).json(res);
+}
+app.get('/getAllSubjectTasks', getAllSubjectTasks);
 
 // TODO: Make sure this still works past midnight
 async function getUpcoming(req, res) {

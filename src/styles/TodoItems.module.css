@@ -51,7 +51,7 @@
   font-weight: 400;
 }
 
-.hoverSpan {
+.hoverSpan:hover {
   cursor: pointer;
 }
 

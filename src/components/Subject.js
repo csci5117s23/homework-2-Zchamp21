@@ -29,6 +29,11 @@ export default function Subject({ subjId, name, color, page, isActive, deleteSub
     await deleteSubject(subjId);
   }
 
+  // I don't want to allow deletion of the default subject.
+  // The delete button wouldn't work for the default subject in my implementation anyway, but
+  // why have it there if it wouldn't work.
+  let isDefault = subjId === "default";
+
   let icon = <FontAwesomeIcon icon={faCircle} style={{color: color}} />
   return (
     <>
@@ -39,7 +44,11 @@ export default function Subject({ subjId, name, color, page, isActive, deleteSub
           </Link>
         </div>
         <div className={`${styles.delete} pure-u-2-24`}>
-          <span className={styles.deleteSpan} onClick={handleDelete}><FontAwesomeIcon icon={faTrashCan} /></span>
+          {isDefault ? (
+            <></>
+          ) : (
+            <span className={styles.deleteSpan} onClick={handleDelete}><FontAwesomeIcon icon={faTrashCan} /></span>
+          )}
         </div>
       </div>
     </>
