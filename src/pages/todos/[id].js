@@ -18,6 +18,7 @@ export default function Task() {
 
   const { isSignedIn, user } = useUser();
   const { isLoaded, userId, sessionId, getToken } = useAuth();
+
   // const router = useRouter();
 
   // useEffect(() => {
@@ -34,9 +35,9 @@ export default function Task() {
 
   // return <p>Task: {id}</p>
 
-  if (router.isFallback) {
-    return <h1>LOADING...</h1>
-  }
+  // if (router.isFallback) {
+  //   return <h1>LOADING...</h1>
+  // }
 
   useEffect(() => {
     const getIndividualTask = async () => {

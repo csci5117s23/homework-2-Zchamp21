@@ -5,6 +5,7 @@ import FilterList from "./FilterList";
 import GoBack from "./GoBack";
 
 export default function TaskData({ data, setCurSubjectColor }) {
+  // console.log('doc referrer: ', document.referrer);
   let curDate = new Date(data.dueDate);
 
   let year = curDate.getUTCFullYear();
@@ -25,6 +26,9 @@ export default function TaskData({ data, setCurSubjectColor }) {
   today.setHours(0, 0, 0, 0);
 
   let isOverdue = newDate < today;
+
+  // let prevUrl = window.history.state.prevUrl;
+  // console.log('prev url: ', prevUrl);
 
   return (
     <div className={`${styles.taskData} pure-u-7-24`}>

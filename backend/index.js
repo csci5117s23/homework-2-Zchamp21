@@ -254,6 +254,7 @@ app.use('/todoItems', (req, res, next) => {
   next();
 });
 
+// TODO: Do something similar to this for /subjects/:id.
 app.use('/todoItems/:id', async (req, res, next) => {
   const id = req.params.ID;
   const userId = req.user_token.sub;

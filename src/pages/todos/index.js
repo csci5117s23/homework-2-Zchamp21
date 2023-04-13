@@ -20,7 +20,7 @@ export default function Todos() {
   // const { isLoaded, isSignedIn, user } = useUser();
   // const router = useRouter();
 
-  
+  // window.history.pushState({ prevUrl: window.location.href}, null);
 
   const defaultSubject = {
     "title": "Default Subject",

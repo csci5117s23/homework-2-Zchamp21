@@ -4,10 +4,10 @@ import Link from "next/link";
 import styles from '../styles/IndividualTask.module.css';
 
 
-export default function GoBack() {
+export default function GoBack({ subjId }) {
   return (
     <div className={styles.goBack}>
-      <span className={styles.goBackSpan}><Link href='/todos'><span className={styles.goBackIcon}><FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon></span> <span className={styles.goBackText}>Go Back</span></Link></span>
+      <span className={styles.goBackSpan}><Link href='/todos'><span className={styles.goBackIcon}><FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon></span> <span className={styles.goBackText}>Go Back to All To Do's</span></Link></span>
     </div>
   );
 }

@@ -14,6 +14,9 @@ export default function IndividualSubject() {
   const router = useRouter();
   let { subjId } = router.query;
 
+  // window.history.pushState({ prevUrl: window.location.href}, null);
+  // console.log('history prev url: ', window.history.prevUrl);
+
   const defaultSubject = {
     "title": "Default Subject",
     "color": "slategrey",
