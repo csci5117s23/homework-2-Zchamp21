@@ -114,6 +114,9 @@ export default function Todos() {
           ></TodoItems>
         </div>
       </SignedIn>
+      <SignedOut>
+        <RedirectToSignIn></RedirectToSignIn>
+      </SignedOut>
     </>
   );
 }
