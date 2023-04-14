@@ -275,6 +275,26 @@ app.use('/todoItems/:id', async (req, res, next) => {
   next();
 });
 
+app.use('/subjects/:id', async (req, res, next) => {
+  const id = req.params.ID;
+  const userId = req.user_token.sub;
+
+  const conn = await Datastore.open();
+  try {
+    const subject = await conn.getOne('subjects', id);
+    if (subject.user != userId) {
+      res.status(403).end();
+      return;
+    }
+  } catch (e) {
+    console.error('Error: ', e);
+    res.status(404).end(e);
+    return;
+  }
+
+  next();
+});
+
 // app.use('/upcoming', (req, res, next) => {
 //   if (req.method === "GET") {
 //     req.query.user = req.user_token.sub;

@@ -43,20 +43,4 @@ export default function Home() {
       {/* </SignedOut> */}
     </>
   );
-
-  return (
-    <Layout>
-      <Head>
-        <title>Welcome!</title>
-        <link rel='icon' href='/favicon.ico' />
-      </Head>
-      <div className={styles.mainDiv}>
-        <main>
-          <h1 className={styles.welcome}>Welcome to Zach's To-Do App!</h1>
-          <br></br><br></br>
-          <h2>If you would to make your own to-do list, please login <Link href='/todos'>here</Link>!</h2>
-        </main>
-      </div>
-    </Layout>
-  )
 }

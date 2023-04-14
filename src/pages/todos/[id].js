@@ -19,6 +19,13 @@ export default function Task() {
   const { isSignedIn, user } = useUser();
   const { isLoaded, userId, sessionId, getToken } = useAuth();
 
+  useEffect(() => {
+    if (!user) {
+      console.log('user: ', user);
+      router.push('/');
+    }
+  }, [user])
+
   // const router = useRouter();
 
   // useEffect(() => {

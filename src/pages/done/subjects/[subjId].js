@@ -1,6 +1,6 @@
 const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
-import { SignedIn, SignedOut, useAuth } from "@clerk/nextjs";
+import { SignedIn, SignedOut, useAuth, useUser } from "@clerk/nextjs";
 import { RedirectToSignIn } from '@clerk/clerk-react';
 import { useRouter } from "next/router";
 import { useState, useEffect } from 'react';
@@ -28,7 +28,15 @@ export default function IndividualSubject() {
   const [loading, setLoading] = useState(true);
   const [subjectDeleteTracker, setSubjectDeleteTracker] = useState(true);
 
+  const { isSignedIn, user } = useUser();
   const { isLoaded, userId, sessionId, getToken } = useAuth();
+
+  useEffect(() => {
+    if (!user) {
+      console.log('user: ', user);
+      router.push('/');
+    }
+  }, [user])
 
   function toggleTopForm() {
     setTopFormVisible(!topFormVisible);
@@ -37,6 +45,36 @@ export default function IndividualSubject() {
   function toggleBottomForm() {
     setBottomFormVisible(!bottomFormVisible);
   }
+
+  // Before doing anything else, first check that the desired subject exists and the current user has access to it.
+  useEffect(() => {
+    const getIndividualSubject = async () => {
+      // If the subjId is the id for the default subject, don't query the database.
+      if (subjId != "default") {
+        try {
+          if (userId) {
+            const token = await getToken({ template: "codehooks" });
+
+            const response = await fetch(backend_base + `/subjects/${subjId}`, {
+              'method': 'GET',
+              'headers': {
+                'Authorization': 'Bearer ' + token
+              }
+            });
+            if (!response.ok) {
+              router.push('/404');
+              return;
+            }
+            const data = await response.json();
+            console.log('Success: ', data);
+          }
+        } catch (error) {
+          console.error('Error: ', error);
+        }
+      }
+    }
+    getIndividualSubject();
+  }, [isLoaded, router]);
 
   useEffect(() => {
     const fetchSubjects = async () => {
@@ -69,7 +107,7 @@ export default function IndividualSubject() {
         <Header 
           username=''
           page='done'
-          showTopForm={toggleTopForm}
+          showTopForm=''
         ></Header>
         <div className='pure-g'>
           <Navigation 
@@ -88,9 +126,6 @@ export default function IndividualSubject() {
           ></SubjectDoneItems>
         </div>
       </SignedIn>
-      <SignedOut>
-        <RedirectToSignIn></RedirectToSignIn>
-      </SignedOut>
     </>
   )
 }
