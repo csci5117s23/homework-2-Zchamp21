@@ -9,7 +9,6 @@ import { date, object, string, boolean } from 'yup';
 import jwtDecode from 'jwt-decode';
 
 const todoItemsYup = object({
-  // user_id: string().required(),
   title: string().required(),
   description: string(),
   subject: string().required(),
@@ -70,85 +69,6 @@ async function getDoneSubjectTasks(req, res) {
 }
 app.get('/getDoneSubjectTasks', getDoneSubjectTasks);
 
-// TODO: Make sure this still works past midnight
-async function getUpcoming(req, res) {
-  let userId = req.user_token.sub;
-
-  let today = new Date();
-  today.setHours(0, 0, 0, 0);
-  let year = today.getUTCFullYear();
-  let month = today.getUTCMonth()+1;
-  let day = today.getUTCDate();
-  let monthStr = '';
-  let dayStr = '';
-  if (month < 10) {
-    monthStr = `0${month}`;
-  } else {
-    monthStr = month.toString();
-  }
-
-  if (day < 10) {
-    dayStr = `0${day}`;
-  } else {
-    dayStr = day.toString();
-  }
-
-  let todayStr = `${year}/${monthStr}/${dayStr}`;
-  let newToday = new Date(todayStr);
-  // today = today.toLocaleString("en-US", {timeZone: "America/Chicago"});
-
-  // let newDate = new Date(today.toISOString());
-  // let utcToday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
-
-  const conn = await Datastore.open();
-  // const query = {$and: [{"dueDate":{$gte:{"$date":new Date()}}}, {"isDone": false}, {"user": userId}]};
-  const query = {$and: [{"dueDate": {$gte: newToday.toISOString()}}, {"isDone": false}, {"user": userId}]};
-  // const query = {$and: [{"dueDate": newDate}, {"isDone": false}]};
-  const options = {
-    filter: query,
-    sort: {"dueDate": 1}
-  }
-  conn.getMany('todoItems', options).json(res);
-}
-
-async function getOverdue(req, res) {
-  let userId = req.user_token.sub;
-
-  let today = new Date();
-  today.setHours(0, 0, 0, 0);
-  let year = today.getUTCFullYear();
-  let month = today.getUTCMonth()+1;
-  let day = today.getUTCDate();
-  let monthStr = '';
-  let dayStr = '';
-  if (month < 10) {
-    monthStr = `0${month}`;
-  } else {
-    monthStr = month.toString();
-  }
-
-  if (day < 10) {
-    dayStr = `0${day}`;
-  } else {
-    dayStr = day.toString();
-  }
-
-  let todayStr = `${year}/${monthStr}/${dayStr}`;
-  let newToday = new Date(todayStr);
-  console.log('new today in backend: ', newToday);
-
-  // today = today.toLocaleString("en-US", {timeZone: "America/Chicago"});
-  // let utcToday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
-  const conn = await Datastore.open();
-  // const query = {$and: [{"dueDate":{$lt:{"$date":new Date()}}}, {"isDone": false}, {"user": userId}]};
-  const query = {$and: [{"dueDate": {$lt: newToday.toISOString()}}, {"isDone": false}, {"user": userId}]};
-  const options = {
-    filter: query,
-    sort: {"dueDate": 1}
-  }
-  conn.getMany('todoItems', options).json(res); 
-}
-
 async function getDone(req, res) {
   let userId = req.user_token.sub;
   const conn = await Datastore.open();
@@ -159,6 +79,7 @@ async function getDone(req, res) {
   }
   conn.getMany('todoItems', options).json(res);
 }
+app.get("/done", getDone);
 
 async function updateTodos(req, res) {
   let subjId = req.body.origSubjId;
@@ -176,38 +97,6 @@ async function updateTodos(req, res) {
   res.json(data);
 }
 app.patch('/updateTodos', updateTodos);
-
-// async function deleteOne(req, res) {
-//   const conn = await Datastore.open();
-//   const query = {
-//     "_id": {$exists: false}
-//   }
-//   const options = {
-//     filter: query
-//   }
-//   const data = await conn.removeMany('todoItems', options);
-//   res.json(data);
-// }
-// app.delete("/deleteOne", deleteOne);
-
-async function deleteSubjects(req, res) {
-  const conn = await Datastore.open();
-  const query = {
-    "_id": {$exists: false}
-  };
-  const options = {
-    filter: query
-  }
-  const data = await conn.removeMany('subjects', options);
-  res.json(data);
-}
-app.delete("/deleteSubjects", deleteSubjects)
-
-app.get("/done", getDone);
-
-app.get("/upcoming", getUpcoming);
-
-app.get("/overdue", getOverdue);
 
 const userAuth = async (req, res, next) => {
   try {
@@ -254,7 +143,6 @@ app.use('/todoItems', (req, res, next) => {
   next();
 });
 
-// TODO: Do something similar to this for /subjects/:id.
 app.use('/todoItems/:id', async (req, res, next) => {
   const id = req.params.ID;
   const userId = req.user_token.sub;
@@ -294,13 +182,6 @@ app.use('/subjects/:id', async (req, res, next) => {
 
   next();
 });
-
-// app.use('/upcoming', (req, res, next) => {
-//   if (req.method === "GET") {
-//     req.query.user = req.user_token.sub;
-//   }
-//   next();
-// })
 
 // Use Crudlify to create a REST API for any collection
 crudlify(app, {

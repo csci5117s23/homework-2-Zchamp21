@@ -1,13 +1,14 @@
 const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
 import { useState, useEffect } from 'react';
-import { SignedIn, useAuth, useUser } from "@clerk/nextjs";
+import { SignedIn, SignedOut, useAuth, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import Header from "@/components/Header.js";
 import Navigation from "@/components/NavigationComponents/Navigation.js";
 import SubjectDoneItems from "@/components/SubjectComponents/SubjectDoneItems.js";
 import 'purecss/build/grids-responsive.css';
 import 'purecss/build/grids-responsive-min.css';
+import Home from '@/pages';
 
 export default function IndividualSubject() {
   const router = useRouter();
@@ -30,12 +31,12 @@ export default function IndividualSubject() {
   const { isSignedIn, user } = useUser();
   const { isLoaded, userId, sessionId, getToken } = useAuth();
 
-  useEffect(() => {
-    if (!user) {
-      console.log('user: ', user);
-      router.push('/');
-    }
-  }, [user])
+  // useEffect(() => {
+  //   if (!user) {
+  //     console.log('user: ', user);
+  //     router.push('/');
+  //   }
+  // }, [user])
 
   // Before doing anything else, first check that the desired subject exists and the current user has access to it.
   useEffect(() => {
@@ -126,6 +127,9 @@ export default function IndividualSubject() {
             ></SubjectDoneItems>
           </div>
         </SignedIn>
+        <SignedOut>
+          <Home></Home>
+        </SignedOut>
       </>
     )
   }
