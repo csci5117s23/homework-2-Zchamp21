@@ -1,14 +1,13 @@
 const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
-import { SignedIn, SignedOut, useAuth, useUser } from "@clerk/nextjs";
-import { RedirectToSignIn } from '@clerk/clerk-react';
-import { useRouter } from "next/router";
 import { useState, useEffect } from 'react';
+import { SignedIn, useAuth, useUser } from "@clerk/nextjs";
+import { useRouter } from "next/router";
+import Header from "@/components/Header.js";
+import Navigation from "@/components/NavigationComponents/Navigation.js";
+import SubjectDoneItems from "@/components/SubjectComponents/SubjectDoneItems.js";
 import 'purecss/build/grids-responsive.css';
 import 'purecss/build/grids-responsive-min.css';
-import Header from "@/components/Header";
-import Navigation from "@/components/Navigation";
-import SubjectDoneItems from "@/components/SubjectDoneItems";
 
 export default function IndividualSubject() {
   const router = useRouter();
@@ -27,6 +26,8 @@ export default function IndividualSubject() {
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [subjectDeleteTracker, setSubjectDeleteTracker] = useState(true);
+  const [curSubject, setCurSubject] = useState('');
+  const [individualLoading, setIndividualLoading] = useState(true);
 
   const { isSignedIn, user } = useUser();
   const { isLoaded, userId, sessionId, getToken } = useAuth();
@@ -37,14 +38,6 @@ export default function IndividualSubject() {
       router.push('/');
     }
   }, [user])
-
-  function toggleTopForm() {
-    setTopFormVisible(!topFormVisible);
-  }
-
-  function toggleBottomForm() {
-    setBottomFormVisible(!bottomFormVisible);
-  }
 
   // Before doing anything else, first check that the desired subject exists and the current user has access to it.
   useEffect(() => {
@@ -66,11 +59,16 @@ export default function IndividualSubject() {
               return;
             }
             const data = await response.json();
+            setCurSubject(data);
+            setIndividualLoading(false);
             console.log('Success: ', data);
           }
         } catch (error) {
           console.error('Error: ', error);
         }
+      } else {
+        setCurSubject(defaultSubject);
+        setIndividualLoading(false);
       }
     }
     getIndividualSubject();
@@ -101,31 +99,36 @@ export default function IndividualSubject() {
     fetchSubjects();
   }, [isLoaded]);
 
-  return (
-    <>
-      <SignedIn>
-        <Header 
-          username=''
-          page='done'
-          showTopForm=''
-        ></Header>
-        <div className='pure-g'>
-          <Navigation 
-            curPage='done' 
-            uploadedSubject={uploadedSubject}
-            setUploadedSubject={setUploadedSubject}
-            subjects={subjects}
-            setSubjects={setSubjects}
-            loading={loading}
-            subjectDeleteTracker={subjectDeleteTracker}
-            setSubjectDeleteTracker={setSubjectDeleteTracker}
-          ></Navigation>
-          <SubjectDoneItems
-            id={subjId}
-            subjectDeleteTracker={subjectDeleteTracker}
-          ></SubjectDoneItems>
-        </div>
-      </SignedIn>
-    </>
-  )
+  if (individualLoading) {
+    return <div>LOADING SUBJECT...</div>
+  } else {
+    return (
+      <>
+        <SignedIn>
+          <Header 
+            message={`Here are your ${curSubject.title}'s Complete Tasks`}
+            page='done'
+            showTopForm=''
+          ></Header>
+          <div className='pure-g'>
+            <Navigation 
+              curPage='done' 
+              uploadedSubject={uploadedSubject}
+              setUploadedSubject={setUploadedSubject}
+              subjects={subjects}
+              setSubjects={setSubjects}
+              loading={loading}
+              subjectDeleteTracker={subjectDeleteTracker}
+              setSubjectDeleteTracker={setSubjectDeleteTracker}
+              curSubjId={subjId}
+            ></Navigation>
+            <SubjectDoneItems
+              id={subjId}
+              subjectDeleteTracker={subjectDeleteTracker}
+            ></SubjectDoneItems>
+          </div>
+        </SignedIn>
+      </>
+    )
+  }
 }

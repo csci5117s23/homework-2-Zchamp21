@@ -19,7 +19,6 @@
 
 .navigation {
   background-color:whitesmoke;
-  /* max-height: calc(100vh - 88.67px); */
   min-height: calc(100vh - 88.67px);
 }
 
@@ -36,7 +35,6 @@
   border-radius: 50%;
   float: right;
   color: black;
-  /* margin: 0 auto; */
 }
 
 .add:hover {
@@ -54,21 +52,12 @@
   text-align: center;
 }
 
-/* .subjectTitle {
-  margin: 1em;
-  margin: 0.5em 0;
-} */
-
 .subjectInput {
   margin: 0.75em 0.5em 0.5em 0;
 }
 
-/* .colorInput {
-  margin: 0.75em 0 0.5em 0;
-} */
-
 .cancelButton {
-  margin-right: 0.75em;
+  margin-left: 0.75em;
   margin-bottom: 0.75em;
 }
 
@@ -104,16 +93,8 @@
   cursor: pointer;
 }
 
-/* .formSubmit {
-  margin-bottom: 0.75em;
-} */
-
 @media only screen and (max-width: 64em) {
   .navigation {
     min-height: 0;
   }
-
-  /* .filter {
-    padding-bottom: 0.5em;
-  } */
 }

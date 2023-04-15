@@ -1,52 +1,41 @@
 const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
+import { useState, useEffect } from 'react';
+import { SignedIn, useUser, useAuth } from '@clerk/nextjs';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
 import Header from '@/components/Header.js';
-import Navigation from '@/components/Navigation.js';
-import styles from '@/styles/Todos.module.css';
-import filterStyles from '@/styles/Filters.module.css';
-import React, { useState, useEffect } from 'react';
-import TodoItems from '@/components/TodoItems.js';
+import Navigation from '@/components/NavigationComponents/Navigation.js';
+import TodoItems from '@/components/TodoComponents/TodoItems.js';
 import 'purecss/build/grids-responsive.css';
 import 'purecss/build/grids-responsive-min.css';
-import { config } from "@fortawesome/fontawesome-svg-core";
-import { RedirectToSignIn } from '@clerk/clerk-react';
-// You should do that in a Layout file or in `gatsby-browser.js`.
-config.autoAddCss = false;
-import { ClerkProvider, SignedIn, SignedOut, SignIn, useUser, useAuth } from '@clerk/nextjs';
-import Home from '..';
-import { useRouter } from 'next/router';
 
 export default function Todos() {
-  // const { isLoaded, isSignedIn, user } = useUser();
-  // const router = useRouter();
-
-  // window.history.pushState({ prevUrl: window.location.href}, null);
-
-  const defaultSubject = {
-    "title": "Default Subject",
-    "color": "slategrey",
-    "user": "default",
-    "_id": "default"
-  };
-
   const [topFormVisible, setTopFormVisible] = useState(false);
   const [bottomFormVisible, setBottomFormVisible] = useState(false);
-  const [uploadedSubject, setUploadedSubject] = useState(null);
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [subjectDeleteTracker, setSubjectDeleteTracker] = useState('');
-  console.log('subject del tracker in todos: ', subjectDeleteTracker);
 
   const { isSignedIn, user } = useUser();
   const { isLoaded, userId, sessionId, getToken } = useAuth();
   const router = useRouter();
 
+  // Redirect to '/' if the user is not logged in.
   useEffect(() => {
     if (!user) {
       console.log('user: ', user);
       router.push('/');
     }
   }, [user])
+
+  // A default subject so that when a user deletes a subject, the tasks of that subject have somewhere to go.
+  const defaultSubject = {
+    "title": "Default Subject",
+    "color": "slategrey",
+    "user": "default",
+    "_id": "default"
+  };
 
   function toggleTopForm() {
     setTopFormVisible(!topFormVisible);
@@ -81,24 +70,24 @@ export default function Todos() {
     fetchSubjects();
   }, [isLoaded]);
 
-  // TODO: Get rid of the username in the Header component.
   return (
     <>
       <SignedIn>
+        <Head>
+          <title>Your Todos</title>
+          <link rel='icon' href='/favicon.ico' />
+      </Head>
         <Header 
-          username=''
+          message='Here are your Incomplete Tasks'
           page='todos'
           showTopForm={toggleTopForm}
         ></Header>
         <div className='pure-g'>
           <Navigation 
             curPage='todos' 
-            uploadedSubject={uploadedSubject}
-            setUploadedSubject={setUploadedSubject}
             subjects={subjects}
             setSubjects={setSubjects}
             loading={loading}
-            subjectDeleteTracker={subjectDeleteTracker}
             setSubjectDeleteTracker={setSubjectDeleteTracker}
           ></Navigation>
           <TodoItems 
@@ -106,9 +95,7 @@ export default function Todos() {
             bottomFormVisible={bottomFormVisible} 
             toggleTopForm={toggleTopForm}
             toggleBottomForm={toggleBottomForm}
-            uploadedSubject={uploadedSubject}
             subjects={subjects}
-            setSubjects={setSubjects}
             loading={loading}
             subjectDeleteTracker={subjectDeleteTracker}
           ></TodoItems>

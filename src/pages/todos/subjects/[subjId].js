@@ -1,21 +1,17 @@
 const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
-import { SignedIn, SignedOut, useAuth, useUser } from "@clerk/nextjs";
-import { RedirectToSignIn } from '@clerk/clerk-react';
-import { useRouter } from "next/router";
 import { useState, useEffect } from 'react';
+import { SignedIn, useAuth, useUser } from "@clerk/nextjs";
+import { useRouter } from "next/router";
+import Header from "@/components/Header.js";
+import Navigation from "@/components/NavigationComponents/Navigation.js";
+import SubjectTodoItems from "@/components/SubjectComponents/SubjectTodoItems.js";
 import 'purecss/build/grids-responsive.css';
 import 'purecss/build/grids-responsive-min.css';
-import Header from "@/components/Header";
-import Navigation from "@/components/Navigation";
-import SubjectTodoItems from "@/components/SubjectTodoItems";
 
 export default function IndividualSubject() {
   const router = useRouter();
   let { subjId } = router.query;
-
-  // window.history.pushState({ prevUrl: window.location.href}, null);
-  // console.log('history prev url: ', window.history.prevUrl);
 
   const defaultSubject = {
     "title": "Default Subject",
@@ -30,13 +26,14 @@ export default function IndividualSubject() {
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [subjectDeleteTracker, setSubjectDeleteTracker] = useState(true);
+  const [curSubject, setCurSubject] = useState('');
+  const [individualLoading, setIndividualLoading] = useState(true);
 
   const { isSignedIn, user } = useUser();
   const { isLoaded, userId, sessionId, getToken } = useAuth();
 
   useEffect(() => {
     if (!user) {
-      // console.log('user: ', user);
       router.push('/');
     }
   }, [user])
@@ -69,11 +66,16 @@ export default function IndividualSubject() {
               return;
             }
             const data = await response.json();
+            setCurSubject(data);
+            setIndividualLoading(false);
             console.log('Success: ', data);
           }
         } catch (error) {
           console.error('Error: ', error);
         }
+      } else {
+        setCurSubject(defaultSubject);
+        setIndividualLoading(false);
       }
     }
     getIndividualSubject();
@@ -104,39 +106,44 @@ export default function IndividualSubject() {
     fetchSubjects();
   }, [isLoaded]);
 
-  return (
-    <>
-      <SignedIn>
-        <Header 
-          username=''
-          page='todos'
-          showTopForm={toggleTopForm}
-        ></Header>
-        <div className='pure-g'>
-          <Navigation 
-            curPage='todos' 
-            uploadedSubject={uploadedSubject}
-            setUploadedSubject={setUploadedSubject}
-            subjects={subjects}
-            setSubjects={setSubjects}
-            loading={loading}
-            subjectDeleteTracker={subjectDeleteTracker}
-            setSubjectDeleteTracker={setSubjectDeleteTracker}
-          ></Navigation>
-          <SubjectTodoItems
-            id={subjId}
-            topFormVisible={topFormVisible} 
-            bottomFormVisible={bottomFormVisible} 
-            toggleTopForm={toggleTopForm}
-            toggleBottomForm={toggleBottomForm}
-            uploadedSubject={uploadedSubject}
-            subjects={subjects}
-            setSubjects={setSubjects}
-            loading={loading}
-            subjectDeleteTracker={subjectDeleteTracker}
-          ></SubjectTodoItems>
-        </div>
-      </SignedIn>
-    </>
-  )
+  if (individualLoading) {
+    return <div>LOADING SUBJECT...</div>
+  } else {
+    return (
+      <>
+        <SignedIn>
+          <Header 
+            message={`Here are your ${curSubject.title}'s Incomplete Tasks`}
+            page='todos'
+            showTopForm={toggleTopForm}
+          ></Header>
+          <div className='pure-g'>
+            <Navigation 
+              curPage='todos' 
+              uploadedSubject={uploadedSubject}
+              setUploadedSubject={setUploadedSubject}
+              subjects={subjects}
+              setSubjects={setSubjects}
+              loading={loading}
+              subjectDeleteTracker={subjectDeleteTracker}
+              setSubjectDeleteTracker={setSubjectDeleteTracker}
+              curSubjId={subjId}
+            ></Navigation>
+            <SubjectTodoItems
+              id={subjId}
+              topFormVisible={topFormVisible} 
+              bottomFormVisible={bottomFormVisible} 
+              toggleTopForm={toggleTopForm}
+              toggleBottomForm={toggleBottomForm}
+              uploadedSubject={uploadedSubject}
+              subjects={subjects}
+              setSubjects={setSubjects}
+              loading={loading}
+              subjectDeleteTracker={subjectDeleteTracker}
+            ></SubjectTodoItems>
+          </div>
+        </SignedIn>
+      </>
+    );
+  }
 }

@@ -1,18 +1,14 @@
 const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
+import { useEffect, useState } from 'react';
+import { SignedIn, useAuth, useUser } from '@clerk/nextjs';
 import Header from '@/components/Header.js';
-import Navigation from '@/components/Navigation.js';
-import styles from '@/styles/Todos.module.css';
-import filterStyles from '@/styles/Filters.module.css';
-import React, { useEffect, useState } from 'react';
-import TodoItems from '@/components/TodoItems.js';
+import Navigation from '@/components/NavigationComponents/Navigation.js';
+import DoneItems from '@/components/TodoComponents/DoneItems.js';
 import 'purecss/build/grids-responsive.css';
 import 'purecss/build/grids-responsive-min.css';
-import DoneItems from '@/components/DoneItems.js';
-import { SignedIn, SignedOut, useAuth, useUser } from '@clerk/nextjs';
-import { RedirectToSignIn } from '@clerk/clerk-react';
+
 import { useRouter } from 'next/router';
-// import { ClerkProvider, SignedIn, SignedOut, SignIn, useUser } from '@clerk/clerk-react';
 
 export default function Done() {
   const defaultSubject = {
@@ -22,17 +18,10 @@ export default function Done() {
     "_id": "default"
   };
 
-  const [topFormVisible, setTopFormVisible] = useState(false);
-  const [bottomFormVisible, setBottomFormVisible] = useState(false);
   const [uploadedSubject, setUploadedSubject] = useState(null);
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [subjectDeleteTracker, setSubjectDeleteTracker] = useState(true);
-
-  // const { isLoaded, userId, sessionId, getToken } = useAuth();
-  // const { isLoaded, isSignedIn, user } = useUser();
-  // const [curUser, setCurUser] = useState(user);
-  // console.log(curUser);
 
   const { isSignedIn, user } = useUser();
   const { isLoaded, userId, sessionId, getToken } = useAuth();
@@ -44,14 +33,6 @@ export default function Done() {
       router.push('/');
     }
   }, [user])
-
-  function toggleTopForm() {
-    setTopFormVisible(!topFormVisible);
-  }
-
-  function toggleBottomForm() {
-    setBottomFormVisible(!bottomFormVisible);
-  }
 
   useEffect(() => {
     const fetchSubjects = async () => {
@@ -78,14 +59,11 @@ export default function Done() {
     fetchSubjects();
   }, [isLoaded]);
 
-  // TODO: Update the username to be dependent on who is logged in.
   return (
-    // <ClerkProvider>
-    //   <SignedIn>
     <>
       <SignedIn>
         <Header 
-          username=''
+          message='Here are Your Completed Tasks'
           page='done'
           showTopForm=''
         ></Header>
@@ -97,7 +75,6 @@ export default function Done() {
             subjects={subjects}
             setSubjects={setSubjects}
             loading={loading}
-            subjectDeleteTracker={subjectDeleteTracker}
             setSubjectDeleteTracker={setSubjectDeleteTracker}
           ></Navigation>
           <DoneItems
@@ -106,10 +83,5 @@ export default function Done() {
         </div>
       </SignedIn>
     </>
-    //   {/* </SignedIn>
-    //   <SignedOut>
-    //     <SignIn />
-    //   </SignedOut>
-    // </ClerkProvider> */}
   );
 }
