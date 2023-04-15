@@ -1,12 +1,12 @@
 const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
 import { useState, useEffect } from 'react';
-import { SignedIn, useUser, useAuth } from '@clerk/nextjs';
+import { SignedIn, SignedOut, useAuth } from '@clerk/nextjs';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import Header from '@/components/Header.js';
 import Navigation from '@/components/NavigationComponents/Navigation.js';
 import TodoItems from '@/components/TodoComponents/TodoItems.js';
+import Home from '..';
 import 'purecss/build/grids-responsive.css';
 import 'purecss/build/grids-responsive-min.css';
 
@@ -17,17 +17,7 @@ export default function Todos() {
   const [loading, setLoading] = useState(true);
   const [subjectDeleteTracker, setSubjectDeleteTracker] = useState('');
 
-  const { isSignedIn, user } = useUser();
   const { isLoaded, userId, sessionId, getToken } = useAuth();
-  const router = useRouter();
-
-  // Redirect to '/' if the user is not logged in.
-  useEffect(() => {
-    if (!user) {
-      console.log('user: ', user);
-      router.push('/');
-    }
-  }, [user])
 
   // A default subject so that when a user deletes a subject, the tasks of that subject have somewhere to go.
   const defaultSubject = {
@@ -101,6 +91,9 @@ export default function Todos() {
           ></TodoItems>
         </div>
       </SignedIn>
+      <SignedOut>
+        <Home></Home>
+      </SignedOut>
     </>
   );
 }

@@ -1,14 +1,13 @@
 const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
 import { useEffect, useState } from 'react';
-import { SignedIn, useAuth, useUser } from '@clerk/nextjs';
+import { SignedIn, SignedOut, useAuth, useUser } from '@clerk/nextjs';
 import Header from '@/components/Header.js';
 import Navigation from '@/components/NavigationComponents/Navigation.js';
 import DoneItems from '@/components/TodoComponents/DoneItems.js';
+import Home from '..';
 import 'purecss/build/grids-responsive.css';
 import 'purecss/build/grids-responsive-min.css';
-
-import { useRouter } from 'next/router';
 
 export default function Done() {
   const defaultSubject = {
@@ -23,16 +22,7 @@ export default function Done() {
   const [loading, setLoading] = useState(true);
   const [subjectDeleteTracker, setSubjectDeleteTracker] = useState(true);
 
-  const { isSignedIn, user } = useUser();
   const { isLoaded, userId, sessionId, getToken } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!user) {
-      console.log('user: ', user);
-      router.push('/');
-    }
-  }, [user])
 
   useEffect(() => {
     const fetchSubjects = async () => {
@@ -82,6 +72,9 @@ export default function Done() {
           ></DoneItems>
         </div>
       </SignedIn>
+      <SignedOut>
+        <Home></Home>
+      </SignedOut>
     </>
   );
 }

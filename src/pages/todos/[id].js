@@ -2,9 +2,10 @@ const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { SignedIn, useAuth, useUser } from '@clerk/nextjs';
+import { SignedIn, SignedOut, useAuth } from '@clerk/nextjs';
 import Header from '@/components/Header.js';
 import IndividualTask from '@/components/TaskComponents/IndividualTask.js';
+import Home from '..';
 
 export default function Task() {
   const [curTask, setCurTask] = useState(null);
@@ -13,14 +14,7 @@ export default function Task() {
   const router = useRouter();
   let { id } = router.query;
 
-  const { isSignedIn, user } = useUser();
   const { isLoaded, userId, sessionId, getToken } = useAuth();
-
-  useEffect(() => {
-    if (!user) {
-      router.push('/');
-    }
-  }, [user])
 
   useEffect(() => {
     const getIndividualTask = async () => {
@@ -92,6 +86,9 @@ export default function Task() {
           <IndividualTask task={curTask} setComplete={updateIsDone}></IndividualTask>
         )}
       </SignedIn>
+      <SignedOut>
+        <Home></Home>
+      </SignedOut>
     </>
   );
 }

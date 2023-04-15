@@ -1,11 +1,12 @@
 const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
 import { useState, useEffect } from 'react';
-import { SignedIn, useAuth, useUser } from "@clerk/nextjs";
+import { SignedIn, SignedOut, useAuth, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import Header from "@/components/Header.js";
 import Navigation from "@/components/NavigationComponents/Navigation.js";
 import SubjectTodoItems from "@/components/SubjectComponents/SubjectTodoItems.js";
+import Home from '@/pages';
 import 'purecss/build/grids-responsive.css';
 import 'purecss/build/grids-responsive-min.css';
 
@@ -29,14 +30,7 @@ export default function IndividualSubject() {
   const [curSubject, setCurSubject] = useState('');
   const [individualLoading, setIndividualLoading] = useState(true);
 
-  const { isSignedIn, user } = useUser();
   const { isLoaded, userId, sessionId, getToken } = useAuth();
-
-  useEffect(() => {
-    if (!user) {
-      router.push('/');
-    }
-  }, [user])
 
   function toggleTopForm() {
     setTopFormVisible(!topFormVisible);
@@ -49,8 +43,10 @@ export default function IndividualSubject() {
   // Before doing anything else, first check that the desired subject exists and the current user has access to it.
   useEffect(() => {
     const getIndividualSubject = async () => {
+      console.log('querying');
       // If the subjId is the id for the default subject, don't query the database.
       if (subjId != "default") {
+        console.log('searching');
         try {
           if (userId) {
             const token = await getToken({ template: "codehooks" });
@@ -63,6 +59,7 @@ export default function IndividualSubject() {
             });
             if (!response.ok) {
               router.push('/404');
+              setIndividualLoading(false);
               return;
             }
             const data = await response.json();
@@ -71,6 +68,7 @@ export default function IndividualSubject() {
             console.log('Success: ', data);
           }
         } catch (error) {
+          setIndividualLoading(false);
           console.error('Error: ', error);
         }
       } else {
@@ -143,6 +141,9 @@ export default function IndividualSubject() {
             ></SubjectTodoItems>
           </div>
         </SignedIn>
+        <SignedOut>
+          <Home></Home>
+        </SignedOut>
       </>
     );
   }
