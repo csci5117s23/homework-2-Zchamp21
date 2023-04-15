@@ -20,8 +20,6 @@ export default function IndividualSubject() {
     "_id": "default"
   };
 
-  const [topFormVisible, setTopFormVisible] = useState(false);
-  const [bottomFormVisible, setBottomFormVisible] = useState(false);
   const [uploadedSubject, setUploadedSubject] = useState(null);
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
