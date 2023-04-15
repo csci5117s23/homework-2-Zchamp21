@@ -18,3 +18,6 @@ https://tiny-torte-956043.netlify.app/
 * I started the challenge task: yes
 * I completed the challenge task: yes
 
+I also wanted to mention that I sorted my to do tasks by due date, such that soonest due are at the top and latest due 
+are at the bottom, as opposed to the homework writeup to order by recently created. I had emailed about this and got
+approval to sort this way instead, but just wanted to remind you here.
